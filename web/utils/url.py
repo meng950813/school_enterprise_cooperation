@@ -1,11 +1,7 @@
 import re
-import random
-import string
 from flask import request, redirect, url_for, current_app
 from urllib.parse import urlparse, urljoin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
-
-from config import SEND_SMS_CONFIG
 
 
 TELEPHONE = re.compile(r"^1[3|4|5|6|7|8]\d{9}$")
