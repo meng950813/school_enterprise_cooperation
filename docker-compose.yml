@@ -1,0 +1,15 @@
+version: "2.2"
+services:
+ web:
+  build: .
+  image: social_network
+  volumes:
+  - .:/code
+ nginx:
+  build: ./nginx
+  ports:
+  - "80:80"
+  volumes:
+   - .:/code
+  links:
+  - "web:web"

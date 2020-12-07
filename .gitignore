@@ -1,0 +1,14 @@
+# .gitignore
+
+
+.idea
+__pycache__/
+venv/
+env/
+uploads/
+
+.flaskenv
+.env
+.pytest_cache
+config.py
+logs/*.txt
