@@ -55,4 +55,7 @@ html, body {
     .navbar-vertical.navbar-expand-md {
         max-width: 240px;
     }
+    .navbar-vertical.navbar-expand-md.fixed-left:not([style*="display: none"])~.main-content{
+        margin-left: 240px;
+    }
 }

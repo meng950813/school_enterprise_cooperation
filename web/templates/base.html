@@ -42,11 +42,13 @@
             <!-- Dropup -->
             <div class="dropup">
                 <!-- Toggle -->
-                <a href="{{ url_for('recommend_graph.personalNetwork') }}" id="sidebarIconCopy" class="dropdown-toggle" role="button" data-toggle="dropdown"
+                <a href="{{ url_for('recommend_graph.personalNetwork') }}" id="sidebarIconCopy" class="dropdown-toggle"
+                   role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     <div class="avatar avatar-sm avatar-online">
-{#                        <img src="{{ url_for("user.avatar", filename=current_user['avatar']) }}" class="avatar-img rounded-circle" alt="...">#}
-                        <img src="{{ url_for("static", filename="image/logo.png") }}" class="avatar-img rounded-circle" alt="...">
+                        {#                        <img src="{{ url_for("user.avatar", filename=current_user['avatar']) }}" class="avatar-img rounded-circle" alt="...">#}
+                        <img src="{{ url_for("static", filename="image/logo.png") }}" class="avatar-img rounded-circle"
+                             alt="...">
                     </div>
                 </a>
                 <!-- Menu -->
@@ -60,9 +62,11 @@
         </div>
     </div>
 </nav>
-<main>
-    {% block main %}{% endblock %}
-</main>
+<div class="main-content">
+    <main>
+        {% block main %}{% endblock %}
+    </main>
+</div>
 
 <div id="alert-box" class="alert alert-success alert-box" style="display: none">
     <strong><span class="alert-message">提交成功，等待管理员审核</span></strong>
