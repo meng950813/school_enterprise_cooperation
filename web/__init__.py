@@ -60,8 +60,9 @@ def register_extensions(app):
 
 def register_blueprints(app):
     # 校企合作相关
-    app.register_blueprint(recommend_bp, url_prefix="/recommend")
+    app.register_blueprint(recommend_graph_bp)
     app.register_blueprint(recommend_graph_bp, url_prefix="/recommend-graph")
+    app.register_blueprint(recommend_bp, url_prefix="/recommend")
     app.register_blueprint(link_path_bp, url_prefix="/link-path")
 
 
