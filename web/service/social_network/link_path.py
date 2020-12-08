@@ -126,6 +126,7 @@ def generateLink(relation, source, target):
         }
     """
     label = ""
+    # TODO 未获取到关系中的属性
     for key, value in dict(relation).items():
         if key in relation_dict and value > 0:
             label += relation_dict[key] % value
