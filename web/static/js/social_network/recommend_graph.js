@@ -49,7 +49,7 @@ let ArrayGraphOption = {
                 borderWidth: 1,
                 shadowBlur: 10,
                 shadowColor: 'rgba(0, 0, 0, 0.3)',
-                curveness: 0.1,
+                // curveness: 0.1,
             },
             emphasis: {
                 width: 10
@@ -61,10 +61,10 @@ let ArrayGraphOption = {
 
 function formatGraphData(graph_data) {
     let nodes = [];
-    nodes = nodes.concat(generateCoordinate(graph_data.nodes.com, 0, 30, container));
-    nodes = nodes.concat(generateCoordinate(graph_data.nodes.engineer, 0.2, 30, container));
-    nodes = nodes.concat(generateCoordinate(graph_data.nodes.teacher, 0.8, 30, container));
-    nodes = nodes.concat(generateCoordinate(graph_data.nodes.uni, 1, 30, container));
+    nodes = nodes.concat(generateCoordinate(graph_data.nodes.com, 1, 30, container));
+    nodes = nodes.concat(generateCoordinate(graph_data.nodes.engineer, 0.8, 30, container));
+    nodes = nodes.concat(generateCoordinate(graph_data.nodes.teacher, 0.2, 30, container));
+    nodes = nodes.concat(generateCoordinate(graph_data.nodes.uni, 0, 30, container));
 
     ArrayGraphOption.series[0].links = formatLinks(graph_data.links);
     ArrayGraphOption.series[0].data = nodes;
