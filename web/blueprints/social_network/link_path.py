@@ -11,7 +11,7 @@ def getLinkPath():
     agent_type = "uni"  # 从登陆信息中获取
     target_id = request.args.get("target", default=0, type=int)
     target_type = request.args.get("t_type", default="teacher", type=str)
-    step = request.args.get("step", default=5, type=int)
+    step = request.args.get("step", default=3, type=int)
     limit = request.args.get("limit", default=5, type=int)
 
     # target_id = 4797211
