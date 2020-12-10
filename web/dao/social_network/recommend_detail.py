@@ -5,13 +5,27 @@ from web.settings import LABEL
 from web.utils.neo4j_operator import neo4j as neo4j
 
 
-def getTeamBasicInfo(_id, teacher=True):
-    org = LABEL["UNIVERSITY"] if teacher is True else LABEL["COMPANY"]
-    label = LABEL["TEACHER"] if teacher is True else LABEL["ENGINEER"]
+def getTeacherTeamBasicInfo(t_id):
+    """
+    获取专家团队的基本信息, 包括 专家名， 团队人数，所属高校和学院名
+    :param t_id: 专家团队核心节点的 id
+    :return: [{name, members, institution, org}]
+    """
+    cql = "match (org:{uni})-[:include]-(i:{inst})-[:include]-(t:{teacher}) where t.id={id} " \
+          "return org.name as org, t.member as members, t.name as name, i.name as institution" \
+        .format(uni=LABEL["UNIVERSITY"], inst=LABEL["INSTITUTION"], teacher=LABEL["TEACHER"], id=t_id)
+    return neo4j.run(cql)
 
-    cql = "match (org:{org})-[]-(l:{label}) where l.id={id} " \
-          "return org.name as org, l.member as members, l.name as name, " \
-          "l.institution as institution".format(org=org, label=label, id=_id)
+
+def getEngineerTeamBasicInfo(e_id):
+    """
+    获取工程师团队的基本信息， 包括 工程师名， 团队人数，企业名
+    :param e_id: 工程师团队核心节点的 id
+    :return: [{name, members, org}]
+    """
+    cql = "match (org:{com})-[:employ]-(e:{engineer}) where e.id={id} " \
+          "return org.name as org, e.member as members, e.name as name" \
+        .format(com=LABEL["COMPANY"], engineer=LABEL["ENGINEER"], id=e_id)
     return neo4j.run(cql)
 
 
@@ -24,7 +38,7 @@ def getSimilarPatents(team_teacher, team_engineer, teacher=True, skip=0, limit=1
     cql = "match (t:Teacher)-[:write]-(pt:Patent)-[:include]-(:IPC)-[:include]-(pe:Patent)-[:write]-(e:Engineer) " \
           "where t.team={team_teacher} and e.team={team_engineer} " \
           "return distinct({patent}.application_number) as code, {patent}.name as name, " \
-          "{patent}.application_date as date order by date desc skip {skip} limit {limit}"\
+          "{patent}.application_date as date order by date desc skip {skip} limit {limit}" \
         .format(team_teacher=team_teacher, team_engineer=team_engineer, patent=patent, skip=skip, limit=limit)
     return neo4j.run(cql)
 
@@ -84,4 +98,3 @@ def getTeamMembers(team_id, teacher=True):
           "and t1.id <> t2.id return t1.id as id1, t1.name as name1, t1.patent as patent1, r.frequency as count, " \
           "t2.id as id2, t2.name as name2, t2.patent as patent2".format(label=label, team_id=team_id)
     return neo4j.run(cql)
-

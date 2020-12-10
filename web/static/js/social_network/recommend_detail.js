@@ -68,7 +68,7 @@ let TechnicalFieldOption = {
 function getTechnicalFieldComparison() {
     $.ajax({
         type: "get",
-        url: "/recommend/technicalFieldComparison",
+        url: "/detail/technicalFieldComparison",
         data: {"eid": ENGINEER_ID, "tid": TEACHER_ID, "team": TEAM},
         success: function (res) {
             if (res.success === false) {
@@ -122,7 +122,7 @@ function showTeamMembers(type = 0) {
 function getTeamMembers(type = 0) {
     $.ajax({
         type: "get",
-        url: "/recommend/teamMembers",
+        url: "/detail/teamMembers",
         data: {"eid": ENGINEER_ID, "tid": TEACHER_ID},
         success: function (res) {
             TeacherTeamOption = JSON.parse(JSON.stringify(graphOption));

@@ -12,6 +12,7 @@ from web.settings import configuration
 # 校企合作相关
 from web.blueprints.social_network.recommend import recommend_bp as recommend_bp
 from web.blueprints.social_network.recommend_graph import recommend_graph_bp as recommend_graph_bp
+from web.blueprints.social_network.recommend_detail import recommend_detail_bp as recommend_detail_bp
 from web.blueprints.social_network.link_path import link_path_bp as link_path_bp
 
 
@@ -60,14 +61,17 @@ def register_extensions(app):
 
 def register_blueprints(app):
     # 校企合作相关
-    app.register_blueprint(recommend_graph_bp)
+    app.register_blueprint(recommend_graph_bp)  # TODO
     app.register_blueprint(recommend_graph_bp, url_prefix="/recommend-graph")
-    app.register_blueprint(recommend_bp, url_prefix="/recommend")
+    app.register_blueprint(recommend_detail_bp, url_prefix="/detail")
     app.register_blueprint(link_path_bp, url_prefix="/link-path")
+    # TODO to be delete
+    app.register_blueprint(recommend_bp, url_prefix="/recommend")
 
 
 def register_template_context(app):
     """注册模板上下文，使得变量可以在模板中使用"""
+
     @app.context_processor
     def make_template_context():
         return dict(datetime=datetime)

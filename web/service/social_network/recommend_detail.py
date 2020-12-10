@@ -4,16 +4,15 @@ import logging
 import math
 
 
-def recommendDetail(eid=None, tid=None, team=1):
+def compareTeacherAndEngineerTeam(eid=None, tid=None):
     """
 
+    :param eid:
+    :param tid:
+    :return:
     """
-    if eid is None or tid is None:
-        # TODO
-        return {}
-
-    engineer_info = detail_dao.getTeamBasicInfo(_id=eid, teacher=False)
-    teacher_info = detail_dao.getTeamBasicInfo(_id=tid, teacher=True)
+    engineer_info = detail_dao.getEngineerTeamBasicInfo(e_id=eid)
+    teacher_info = detail_dao.getTeacherTeamBasicInfo(t_id=tid)
 
     # patents ==> [] or [{code, name, date}]
     engineer_patents = detail_dao.getSimilarPatents(team_teacher=tid, team_engineer=eid, teacher=False)
