@@ -13,7 +13,7 @@ def index():
     user_id = auth.getUserId()
     # orgs = [{"id": 19036, "name": "清华大学"}]
     universities = public_service.getUserInfo(userid=user_id, area_agent=False)
-    towns = public_service.getUsefulTowns(user_id=user_id)
+    towns = public_service.getUsefulTowns(userid=user_id)
     return render_template("/social_network/recommend2University.html", universities=universities, towns=towns)
 
 
