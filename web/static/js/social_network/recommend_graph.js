@@ -103,6 +103,7 @@ function generateCoordinate(points, offset, symbolSize, container) {
         // points[i].value = [x, y];
         points[i].x = x;
         points[i].y = y;
+        points[i].symbolSize = symbolSize;
     }
 
     return points;

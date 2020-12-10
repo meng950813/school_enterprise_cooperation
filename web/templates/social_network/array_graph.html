@@ -111,11 +111,10 @@
 
     <script src="{{ url_for('static', filename='js/dist/echarts.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/statistics/create_graph.js') }}"></script>
-{#    <script src="{{ url_for('static', filename='js/social_network/recommend_graph.js') }}"></script>#}
-    <script src="{{ url_for('static', filename='js/social_network/recommend_graph2.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/social_network/recommend_graph.js') }}"></script>
     <script src="{{ url_for('static', filename='js/social_network/recommend_graph_event.js') }}"></script>
 
     <script>
-        sendRecommendRequest({"com": "58912", "uni": "19036", "town": 2}, ChartArrayGraph);
+        sendRecommendRequest({"uni": "19036", "town": 2}, ChartArrayGraph);
     </script>
 {% endblock %}
