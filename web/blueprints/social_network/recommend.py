@@ -30,7 +30,7 @@ def recommendDetail():
     tid = request.args.get("tid", default=None, type=int)
     team = request.args.get("team", default=1, type=int)
     basic_info = detail_service.recommendDetail(eid=eid, tid=tid, team=team)
-    return render_template("social_network/detail.html", eid=eid, tid=tid, team=team, basic_info=basic_info)
+    return render_template("social_network/compareTeacherAndEngineerTeam.html", eid=eid, tid=tid, team=team, basic_info=basic_info)
 
 
 @recommend_bp.route("/technicalFieldComparison")
