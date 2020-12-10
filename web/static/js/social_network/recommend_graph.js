@@ -5,7 +5,7 @@ let links_color_pool = ["#9ecae1", "#fdae6b", "#a1d99b", "#bcbddc", "#bdbdbd", "
 let ArrayGraphOption = {
     tooltip: {
         formatter: function (params) {
-            return params.data.weight;
+            return params.data.label;
         }
     },
     legend: [{data: []}],
