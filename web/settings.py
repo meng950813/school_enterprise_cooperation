@@ -50,13 +50,16 @@ RELATION = {
     "PARTNER": "partner",  # 高校中介和地区中介的合作关系
     "INVOLVE": "involve",  # 专家/工程师（团队）所涉及的技术领域 （IPC）
     "PSM": "PSM",  # 专家个人与工程师个人的 相似性预测关系
-    "CSM": "CSM"  # 专家团队与工程师团队的 相似性预测关系
+    "CSM": "CSM",  # 专家团队与工程师团队的 相似性预测关系
+    "CUSM": "CUSM", # 企业-高效 的相似性，可用于解决 带哪些企业去哪些学校的问题
+    "CISM": "CISM", # 企业-学院 的相似性，可用于解决 带哪些企业去哪些学院的问题
 }
 
 LABEL = {
     "CITY": "City",
     "TOWN": "Town",
     "UNIVERSITY": "University",
+    "INSTITUTION": "Institution",
     "TEACHER": "Teacher",
     "COMPANY": "Company",
     "ENGINEER": "Engineer",
