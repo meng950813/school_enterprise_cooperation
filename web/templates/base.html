@@ -107,7 +107,7 @@
 
     $("#btn-logout").on("click", function (){
        let redirect = document.createElement("a");
-        redirect.href = `http://39.98.94.44:8085/auth/realms/kunshan/protocol/openid-connect/logout?redirect_uri=http://127.0.0.1:5000/logout`;
+        redirect.href = `http://39.98.94.44:8085/auth/realms/kunshan/protocol/openid-connect/logout?redirect_uri=http://39.98.94.44:6446/logout`;
         debugger
         redirect.click();
     });
