@@ -3,30 +3,30 @@ from web.dao.social_network import recommend as recommend_dao
 import logging
 
 
-def getOrgId(label, name):
+def recommendUniversityAndCompany(town_id=None, uni_id=None, limit=20, filter_company=""):
     """
-    根据组织机构名，获取对应id
-    :param label: String类型， c => Company, u => University, town => Town
-    :param name:
-    :return: {success=True or False, data=[] or [{id, name}, ...], message="xxx"}
+    针对给定的地区和高校，推荐适合与高校合作的企业
+    :param town_id: int 区镇id, 若 town_id==0 表示全部区镇
+    :param uni_id: String, eg: "123,456,345"
+    :param limit:
+    :param filter_company: String, 需要排除在外的企业id, 字符串类型，以英文逗号分割, eg: "123,4432,5,2354"
+    :return:
     """
-    label = public_service.transformOrg(label)
-    if label is None:
-        logging.error("参数org_label 输入错误: %s" % label)
-        return public_service.returnResult(success=False, message="组织机构类型错误")
-    if not name or 0 == len(name.strip()):
-        # logging.error("参数org_name 输入错误：%s" % name)
-        return public_service.returnResult(success=False, message="组织机构名称不能为空")
-    data = recommend_dao.getOrgId(label=label, name=name)
-    return public_service.returnResult(success=True, data=data)
 
+    if town_id is None or town_id < 0:
+        return public_service.returnResult(success=False, message="区镇选择不正确")
+    if not uni_id or 0 == len(uni_id):
+        return public_service.returnResult(success=False, message="高校不能为空")
 
-def getUniversityList(limit=100):
-    data = recommend_dao.getUniversityList(limit)
-    if not data or len(data) == 0:
-        logging.error("获取高校列表失败")
-        return []
-    return data
+    try:
+        filter_list = []
+        if filter_company and len(filter_company) > 0:
+            filter_list = [int(com_id) for com_id in filter_company.split(",")]
+
+        university_id = [int(u_id) for u_id in uni_id.split(",")]
+    except BaseException as e:
+        logging.error(e)
+        return public_service.returnResult(success=False, message="传入参数格式不正确")
 
 
 def recommendTeacherForArea(area_id=None, uni_id=None, team=True, skip=0, limit=20, sort="", order="desc"):
@@ -64,7 +64,7 @@ def recommendTeacherForCompany(company_id, university_id, team=True, limit=20):
      向企业推荐适合于 某一高校合作的企业及对应团队
     :param company_id: str类型，以 “,” 作为 分隔符， eg: "123，234，456"
     :param university_id: String, eg: "123,456,345"
-    :param team: 是够团队
+    :param team: 是否团队
     :param limit: 一次获取的数据量
     :return:
     """
@@ -95,7 +95,7 @@ def formatResultOfRecommendTeacherForCompany(data, team):
     nodes_com, nodes_engineer, nodes_teacher, nodes_uni = list(), list(), list(), list()
     links = []
     set_node = set()
-    category, category_map = list(), dict()
+    category_list, category_map = list(), dict()
     for record in data:
         com_id = "c_%s" % record["c_id"]
         e_id = "e_%s" % record["e_id"]
@@ -103,7 +103,7 @@ def formatResultOfRecommendTeacherForCompany(data, team):
         u_id = "u_%s" % record["u_id"]
 
         # 添加企业节点
-        index_category = addCategory(category=category, category_map=category_map, node_id=record["c_id"],
+        index_category = addCategory(category_list=category_list, category_map=category_map, node_id=record["c_id"],
                                      name=record["c_name"])
         addNode(node_set=set_node, node_container=nodes_com, node_id=com_id, category=index_category,
                 label=record["c_name"])
@@ -114,7 +114,7 @@ def formatResultOfRecommendTeacherForCompany(data, team):
         addLinks(links=links, source=com_id, target=e_id, category=index_category)
 
         # 添加高校节点
-        index_category = addCategory(category=category, category_map=category_map, node_id=record["u_id"],
+        index_category = addCategory(category_list=category_list, category_map=category_map, node_id=record["u_id"],
                                      name=record["u_name"])
         addNode(node_set=set_node, node_container=nodes_uni, node_id=u_id, category=index_category,
                 label=record["u_name"])
@@ -134,20 +134,37 @@ def formatResultOfRecommendTeacherForCompany(data, team):
         addLinks(links=links, source=e_id, target=t_id, weight=weight)
 
     result = {"com": nodes_com, "engineer": nodes_engineer, "teacher": nodes_teacher, "uni": nodes_uni}
-    return public_service.returnResult(success=True, data={"nodes": result, "links": links, "category": category})
+    return public_service.returnResult(success=True, data={"nodes": result, "links": links, "category": category_list})
 
 
 def addNode(node_set, node_container, node_id, **properties):
+    """
+    将 节点数据 格式化为 Echarts node 类型数据
+    :param node_set: set 类型， 保存已格式化为 node 节点的 node_id,
+    :param node_container: list of dict, 引用类型， [{id, name, symbolSize, ....}, ....]
+    :param node_id: 节点id ==> 源于 图数据库中的 节点id, 此数据唯一
+    :param properties: 节点除 id, name 之外的其他属性
+    :return:
+    """
     if node_id in node_set:
         return None
     node_set.add(node_id)
-    params = {"name": node_id, "symbolSize": 30}
+    # params = {"name": node_id, "symbolSize": 30}
+    params = {"name": node_id}
     for key, v in properties.items():
         params[key] = v
     return node_container.append(params)
 
 
 def addLinks(links, source, target, **properties):
+    """
+    添加节点关系
+    :param links: list of dict, 引用类型，
+    :param source: 节点 id
+    :param target: 节点id
+    :param properties: 关系的属性
+    :return:
+    """
     link = {
         "source": source,
         "target": target
@@ -157,11 +174,16 @@ def addLinks(links, source, target, **properties):
     return links.append(link)
 
 
-def addCategory(category, category_map, node_id, name):
+def addCategory(category_list, category_map, node_id, name):
     """
-    插入category, 返回最新元素的下标
+    根据 node_id 和 category_name 获取每个节点的 category值， 若当前category_name不存在， 添加到 category_list 数组中
+    :param category_list: list of dict, 保存 category_list ==> [{name:xxx}, ...]
+    :param category_map: dict, 保存 每个 node 在 category_list 中对应的 category 的下标
+    :param node_id: int 节点id
+    :param name: category_name
+    :return: 返回当前category 在数组中的下标
     """
     if node_id not in category_map:
-        category.append({"name": name})
-        category_map[node_id] = len(category) - 1
+        category_list.append({"name": name})
+        category_map[node_id] = len(category_list) - 1
     return category_map[node_id]
