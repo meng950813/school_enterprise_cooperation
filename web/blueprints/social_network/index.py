@@ -14,22 +14,16 @@ index_bp = Blueprint('index', __name__)
 def index():
     if auth.require_role("KETD", "技转中心"):
         # 高校技转中心用户
-        return redirect(url_for("recommend2Area.index"))
+        return redirect(url_for("recommend2University.index"))
     elif auth.require_role("KETD", "孵化器"):
         # 地区中介用户
-        pass
+        return redirect(url_for("recommend2Area.index"))
     else:
         abort(404)
 
 
 @index_bp.route("/logout")
 def logout():
-    # back_host = "39.98.94.44"
-    back_host = "127.0.0.1:5000"
-    url = "http://39.98.94.44:8085/auth/realms/kunshan/protocol/openid-connect/logout?" \
-          "redirect_uri=http://{back_host}/logout".format(back_host=back_host)
-    response = requests.get(url=url)
-
     oidc.logout()
     return redirect(url_for('index.index'))
 
