@@ -61,13 +61,14 @@ let ArrayGraphOption = {
 
 function formatGraphData(graph_data) {
     let nodes = [];
-    nodes = nodes.concat(generateCoordinate(graph_data.nodes.com, 1, 30, container));
-    nodes = nodes.concat(generateCoordinate(graph_data.nodes.engineer, 0.8, 30, container));
-    nodes = nodes.concat(generateCoordinate(graph_data.nodes.teacher, 0.2, 30, container));
-    nodes = nodes.concat(generateCoordinate(graph_data.nodes.uni, 0, 30, container));
+    let length = graph_data.nodes.length;
+    let intervel = length > 0 ? 1.0 / (length - 1) : 0;
+    for (let i = 0; i < length; i++) {
+        nodes = nodes.concat(generateCoordinate(graph_data.nodes[i], i * intervel, 30, container));
+    }
 
-    ArrayGraphOption.series[0].links = formatLinks(graph_data.links);
     ArrayGraphOption.series[0].data = nodes;
+    ArrayGraphOption.series[0].links = formatLinks(graph_data.links);
     ArrayGraphOption.series[0].categories = graph_data.category;
     ArrayGraphOption.legend[0].data = graph_data.category.map(function (a) {
         return a.name;
