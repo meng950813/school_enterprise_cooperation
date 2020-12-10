@@ -168,17 +168,11 @@ function nodeClickEvent(data) {
  * @param data 边属性 eg: {source: "e_670", target: "t_4681390", "weight": "xxx"...}
  */
 function edgeClickEvent(data) {
-    if (data.weight && data.source && data.target) {
-        let source = data.source.split("_");
-        let target = data.target.split("_");
-        if (source.length !== 2 || target.length !== 2) {
-            return false;
-        }
-        let url = "/recommend/recommendDetail"
-        let params = `${source[0]}id=${source[1]}&${target[0]}id=${target[1]}&team=1`;
+    if (data.click && data.source && data.target) {
         let redirect = document.createElement("a");
-        redirect.href = `${url}?${params}`;
+        redirect.href = `/detail?s=${data.source}&t=${data.target}`;
         redirect.target = "_blank";
+        debugger
         redirect.click();
     }
 }

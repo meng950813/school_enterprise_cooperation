@@ -70,7 +70,8 @@ def formatRecommendUniversityAndCompany(records):
         category_index = addCategory(category_list, category_map, node_id=record["u_id"], name=record["u_name"])
         addNode(node_set, nodes_uni, node_id=uni_id, category=category_index, label=record["u_name"])  # 添加高校节点
 
-        addLinks(links=links, source=com_id, target=uni_id, label=transformSimilarLabel(record["weight"]))  # 添加相似关系
+        addLinks(links=links, source=com_id, target=uni_id, label=transformSimilarLabel(record["weight"]))
+        # addLinks(links=links, source=com_id, target=uni_id, click=True, label=transformSimilarLabel(record["weight"]))
 
     nodes = [nodes_town, nodes_com, [], nodes_uni]
     return {"nodes": nodes, "links": links, "category": category_list}
@@ -120,7 +121,8 @@ def formatRecommendEngineerAndTeacher(records):
 
         addLinks(links=links, source=u_id, target=i_id, category=category_index)  # 添加学校和学院的关系
         addLinks(links=links, source=i_id, target=t_id, category=category_index)  # 添加学院和专家的关系
-        addLinks(links=links, source=e_id, target=t_id, label=transformSimilarLabel(record["weight"]))  # 添加相似关系
+        # 添加相似关系
+        addLinks(links=links, source=e_id, target=t_id, click=True, label=transformSimilarLabel(record["weight"]))
 
     nodes = [nodes_com, nodes_engineer, [], nodes_teacher, nodes_institution, nodes_uni]
     return {"nodes": nodes, "links": links, "category": category_list}
