@@ -5,6 +5,8 @@ from flask.logging import default_handler
 from flask import Flask, render_template, current_app, url_for, request
 from logging.handlers import RotatingFileHandler
 
+from flask_oidc import OpenIDConnect
+
 from web.extensions import bootstrap, csrf
 
 from web.settings import configuration
@@ -36,6 +38,9 @@ def create_app(config_name=None):
     # 注册模板上下文处理函数
     register_template_context(app)
     register_template_filter(app)
+
+    # 注册 keycloak
+    OpenIDConnect().init_app(app)
 
     return app
 
