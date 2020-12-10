@@ -1,4 +1,29 @@
 from web.settings import LABEL
+from web.dao.social_network import public as public_dao
+
+
+def getOrgId(label, name):
+    """
+    根据组织机构名，获取对应id
+    :param label: String类型， c => Company, u => University, town => Town
+    :param name:
+    :return: {success=True or False, data=[] or [{id, name}, ...], message="xxx"}
+    """
+    label = transformOrg(label)
+    if label is None:
+        return returnResult(success=False, message="组织机构类型错误")
+    if not name or 0 == len(name.strip()):
+        return returnResult(success=False, message="组织机构名称不能为空")
+    data = public_dao.getOrgId(label=label, name=name)
+    return returnResult(success=True, data=data)
+
+
+def getUniversityList(limit=100):
+    data = public_dao.getUniversityList(limit)
+    if not data or len(data) == 0:
+        # logging.error("获取高校列表失败")
+        return []
+    return data
 
 
 def transformOrg(org):

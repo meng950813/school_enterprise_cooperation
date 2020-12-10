@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request
-from web.service.social_network import recommend as recommend_service, recommend_detail as detail_service
+from web.service.social_network import recommend as recommend_service
+from web.service.social_network import public as public_service
+from web.service.social_network import recommend_detail as detail_service
 
 recommend_bp = Blueprint('recommend', __name__)
 
@@ -7,7 +9,7 @@ recommend_bp = Blueprint('recommend', __name__)
 @recommend_bp.route("/")
 @recommend_bp.route("/index")
 def index():
-    universities = recommend_service.getUniversityList(limit=150)
+    universities = public_service.getUniversityList(limit=150)
     return render_template("social_network/index.html", universities=universities)
 
 
