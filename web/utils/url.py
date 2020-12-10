@@ -56,12 +56,3 @@ def get_token(token):
         return None
 
 
-def return_error(error_msg=""):
-    """
-    返回 dict 格式的报错
-    """
-    return {"error": True, "errorMsg": error_msg}
-
-
-def return_flash(message="", category="success"):
-    return {"message": message, "category": category}

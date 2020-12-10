@@ -11,8 +11,8 @@ def getPersonalNetwork(agent_id, agent_type=0):
     :return: [{s_id, s_name, t_id, t_name, org_id, org_name}]
     """
     agent_type = public_service.transformUser(user=agent_type)
-    if (not isinstance(agent_id, int)) or agent_id <= 0 or agent_type is None:
-        return public_service.returnResult(success=False, message="参数不正确")
+    # if (not isinstance(agent_id, int)) or agent_id <= 0 or agent_type is None:
+    #     return public_service.returnResult(success=False, message="参数不正确")
 
     agent = personal_dao.getAgentNode(agent_id=agent_id, agent_type=agent_type)
     if not agent or 0 == len(agent):

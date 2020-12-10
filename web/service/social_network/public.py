@@ -2,6 +2,25 @@ from web.settings import LABEL
 from web.dao.social_network import public as public_dao
 
 
+def getUserInfo(userid, area_agent=True):
+    """
+    根据 用户id 获取用户信息
+    :param userid:
+    :param area_agent: 是否为地区中介 Agent_Area or Agent_University
+    :return: [{"id": 19036, "name": "清华大学"}, ...] or []
+    """
+    label = LABEL["areaAGENT"] if area_agent else LABEL["uniAGENT"]
+    return public_dao.getUserInfo(userid=userid, label=label)
+
+
+def getUsefulTowns(userid):
+    """
+    获取可选择区镇 ==> 有企业的区镇
+    :return: [{"id": 2, "name": "开发区"}]
+    """
+    return public_dao.getUsefulTowns(userid=userid)
+
+
 def getOrgId(label, name):
     """
     根据组织机构名，获取对应id

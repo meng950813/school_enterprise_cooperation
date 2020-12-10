@@ -22,24 +22,26 @@ def getAgentNode(agent_id, agent_type=LABEL["uniAGENT"]):
     """
     根据 id 获取 地区/高校 技转中心中介节点基本信息
     """
-    cql = "match (n:{agent}) where n.id = {id} return n.id as id, n.name as name".format(agent=agent_type, id=agent_id)
+    cql = "match (n:{agent}) where n.id = '{id}' return n.id as id, n.name as name".format(agent=agent_type,
+                                                                                           id=agent_id)
     # cql = "match (n:{agent}) where n.id = {id} return n.name as name".format(agent=agent_type, id=agent_id)
     return neo4j.run(cql)
 
 
 def getVisitTeacherRelation(agent_id, limit=30):
-    cql = "match (agent:{agent_label})-[r:knows]-(p:{target})-[:{rel}]-(org:{org}) where agent.id={id} " \
+    cql = "match (agent:{agent_label})-[r:knows]-(p:{target})-[:include]-(i:{inst})-[:include]-(org:{uni}) " \
+          "where agent.id='{id}' " \
           "return agent.id as s_id, agent.name as s_name, p.id as t_id, p.name as t_name, " \
-          "p.institution as institution, org.id as org_id, org.name as org_name, " \
+          "i.name as institution, org.id as org_id, org.name as org_name, " \
           "r.activity as activity, r.cooperation as coop, r.visited as visited " \
           "order by r.update_time desc limit {limit}" \
-        .format(agent_label=LABEL["uniAGENT"], target=LABEL["TEACHER"], rel=RELATION["INCLUDE"],
-                org=LABEL["UNIVERSITY"], id=agent_id, limit=limit)
+        .format(agent_label=LABEL["uniAGENT"], target=LABEL["TEACHER"], inst=LABEL["INSTITUTION"],
+                uni=LABEL["UNIVERSITY"], id=agent_id, limit=limit)
     return neo4j.run(cql)
 
 
 def getVisitEngineerRelation(agent_id, limit=30):
-    cql = "match (agent:{agent_label})-[r:knows]-(p:{target})-[:{rel}]-(org:{org}) where agent.id={id} " \
+    cql = "match (agent:{agent_label})-[r:knows]-(p:{target})-[:{rel}]-(org:{org}) where agent.id='{id}' " \
           "return agent.id as s_id, agent.name as s_name, p.id as t_id, p.name as t_name, " \
           "org.id as org_id, org.name as org_name" \
           "r.activity as activity, r.cooperation as coop, r.visited as visited " \
@@ -59,7 +61,7 @@ def getAgentPartnerRelation(agent_id, agent_type=LABEL["uniAGENT"]):
     # cql = "match (agent:{agent_label})-[p:partner]-(partner)-[:work]-(org) where agent.id={id} " \
     #       "return agent.name as s_name, agent.id as s_id, org.id as org_id, org.name as org_name, " \
     #       "partner.id as t_id,partner.name as t_name".format(agent_label=agent_type, id=agent_id)
-    cql = "match (agent:{agent_label})-[p:partner]-(partner)-[:work]-(org) where agent.id={id} " \
+    cql = "match (agent:{agent_label})-[p:partner]-(partner)-[:work]-(org) where agent.id='{id}' " \
           "return partner.id as t_id,partner.name as t_name, org.id as org_id, org.name as org_name" \
         .format(agent_label=agent_type, id=agent_id)
     return neo4j.run(cql)

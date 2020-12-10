@@ -2,7 +2,22 @@ let linkPathChart = echarts.init(document.getElementById("link-path-chart"));
 
 //关系图属性
 let linkPathOption = {
-    tooltip: {},
+    tooltip: {
+        formatter: function (param) {
+            if (param.dataType === "node") {
+                let data = param.data;
+                let name = data.name;
+                let institution = data.institution ? data.institution + " - ": "";
+                let tel = "";
+                if (data.node_label === "org" && data.tel){
+                    tel = "<br>电话: " + data.tel;
+                }
+                return `${institution}${name}${tel}`;
+            } else {
+                return "";
+            }
+        }
+    },
     animation: true,
     background: "red",
     color: ["#2c7be5", "#e6550d", "#31a354", "#756bb1", "#636363"],
@@ -16,7 +31,7 @@ let linkPathOption = {
             symbolSize: 25,
             draggable: true,
             edgeSymbol: ['circle', 'arrow'],
-            focusNodeAdjacency: true,
+            // focusNodeAdjacency: true,
             label: {
                 normal: {
                     position: 'inside',
@@ -70,28 +85,53 @@ function getLinkPath(target, type) {
  * @param target: String eg: e_123 or t_345
  * @param target_name: String
  */
-function showLinkPath(target, target_name){
+function showLinkPath(target, target_name) {
     let target_info = target.split("_");
-    if(target_info.length < 2){
+    if (target_info.length < 2) {
         return toggle_alert(false, "目标节点信息不正确");
     }
     let id = target_info[1];
-    let type = target_info[0] === "e"?"engineer": "teacher";
+    let type = target_info[0] === "e" ? "engineer" : "teacher";
     $("#linkPathModalLabel").text(`联络 ${target_name} 的路径`);
     $("#linkPathModal").modal();
     getLinkPath(id, type);
+    // show_test();
+}
 
+function show_test(){
+    let nodes = [{id: "1689525",itemStyle: {color: "#e6550d"},name: "李佳",node_id: 1,node_label: "agent_university"},
+                {id: "395639", institution: "信息科学技术学院", name: "王敬", node_id: 4796285},
+                {id: "396069",institution: "电机工程与应用电子技术系",itemStyle: {color: "#31a354"},name: "何金良",node_id: 4797209,node_label: "teacher"},
+                {id: "397304",name: "电机工程与应用电子技术系",itemStyle: {color: "#756bb1"},node_id: 4801326,node_label: "org", tel: "010-62783057"}];
+    let links = [{source: "1689525", target: "396069"}, {source: "1689525",target: "397304"}, {source: "396069", target: "395639"}, {source: "397304", target: "395639"}];
+    linkPathOption.series[0].data = nodes;
+    linkPathOption.series[0].links = links;
+    linkPathOption.series[0].symbolSize = 25;
+    linkPathChart.setOption(linkPathOption);
+}
+
+function show_test2(){
+    let nodes = [{id: "1689525", itemStyle: {color: "#e6550d"}, name: "李佳", node_id: 1, node_label: "agent_university"},
+                {id: "395639", institution: "信息科学技术学院", name: "许军", node_id: 4796285},
+                {id: "396069", itemStyle: {color: "#756bb1"}, name: "电机工程与应用电子技术系", node_label: "org", tel: "010-62783057"}];
+    let links = [{source: "1689525", target: "396069"},{source: "396069", target: "395639"}];
+    linkPathOption.series[0].data = nodes;
+    linkPathOption.series[0].links = links;
+    linkPathOption.series[0].symbolSize = 25;
+    linkPathChart.setOption(linkPathOption);
 }
 
 /**
  * 注册 echarts 图形的点击事件
  * @param chartObj
  */
-function registerNodeClickEvent(chartObj){
-    chartObj.on("click", function (param){
-        if (param.dataType !== "node"){
+function registerNodeClickEvent(chartObj) {
+    chartObj.on("click", function (param) {
+        if (param.dataType !== "node") {
             return false;
         }
+        let data = param.data;
+        let name = data.institution? `${data.institution} - ${data.name}`: data.name;
         showLinkPath(param.data.id, param.data.name);
     });
 }

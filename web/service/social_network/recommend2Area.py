@@ -1,6 +1,5 @@
 from web.service.social_network import public as public_service
 from web.dao.social_network import recommend2Area as recommend2Area_dao
-import logging
 
 
 def recommendResult(town_id="", com_id="", uni_id="", limit=20):

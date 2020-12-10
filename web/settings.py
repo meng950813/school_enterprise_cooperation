@@ -1,5 +1,6 @@
 import os
-from config import MYSQL_PRODUCTION_URI, SQLALCHEMY_BINDS
+
+from config import MYSQL_PRODUCTION_URI
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
@@ -7,6 +8,15 @@ basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 class BaseConfig(object):
     # wtform库用于CSRF
     SECRET_KEY = os.getenv('SECRET_KEY', "secret key")
+
+    # KeyCloak设置项
+    OIDC_CLIENT_SECRETS = 'client_secrets.json'
+    OIDC_ID_TOKEN_COOKIE_SECURE = False
+    OIDC_REQUIRE_VERIFIED_EMAIL = False
+    OIDC_USER_INFO_ENABLED = True
+    OIDC_OPENID_REALM = 'kunshan'
+    OIDC_SCOPES = ['openid']
+    OIDC_INTROSPECTION_AUTH_METHOD = 'client_secret_post'
 
 
 class DevelopmentConfig(BaseConfig):
@@ -32,12 +42,6 @@ configuration = {
     'production': ProductionConfig
 }
 
-# 中介（孵化器）类型
-AGENT_PATTERN = ["官办官营", "官办民营", "民办民营"]
-
-# 中介（孵化器）等级
-AGENT_LEVEL = ["", "国家级", "省级", "市级", "县级"]
-
 RELATION = {
     "WRITE": "write",
     "INCLUDE": "include",
@@ -51,8 +55,8 @@ RELATION = {
     "INVOLVE": "involve",  # 专家/工程师（团队）所涉及的技术领域 （IPC）
     "PSM": "PSM",  # 专家个人与工程师个人的 相似性预测关系
     "CSM": "CSM",  # 专家团队与工程师团队的 相似性预测关系
-    "CUSM": "CUSM", # 企业-高效 的相似性，可用于解决 带哪些企业去哪些学校的问题
-    "CISM": "CISM", # 企业-学院 的相似性，可用于解决 带哪些企业去哪些学院的问题
+    "CUSM": "CUSM",  # 企业-高效 的相似性，可用于解决 带哪些企业去哪些学校的问题
+    "CISM": "CISM",  # 企业-学院 的相似性，可用于解决 带哪些企业去哪些学院的问题
 }
 
 LABEL = {

@@ -9,7 +9,7 @@ $(".fuzzy-matching").on("input", debounce((e) => {
         return false;
     }
     $.ajax({
-        url: "/recommend-graph/org-info",
+        url: "/org-info",
         data: {"name": val, "type": org_type},
         dataType: "json",
         success: function (res) {
@@ -84,19 +84,6 @@ $(".tag-list").on("click", ".remove-tag", function (e) {
 
 
 /**
- * 查询表单的提交事件
- */
-$("#selector-submit").on("click", function () {
-    let form_data = {
-        "town": $("#town").val(),
-        "com": get_tags_id($(".company-tags .tag")),
-        "uni": get_tags_id($(".university-tags .tag")),
-        "limit": $("#search-number").val()
-    }
-    sendRecommendRequest(form_data, ChartArrayGraph);
-})
-
-/**
  * 请求推荐结果
  * @param data 请求参数
  * @param graphContainer 展示推荐结果的容器 ==> echarts 对象
@@ -105,7 +92,7 @@ function sendRecommendRequest(data, graphContainer) {
     graphContainer.showLoading();
     $.ajax({
         type: "get",
-        url: "/recommend-graph/recommend",
+        url: "/recommend2Area/recommend",
         data: data,
         success: function (res) {
             if (res.success === false) {
@@ -126,29 +113,29 @@ function sendRecommendRequest(data, graphContainer) {
     });
 }
 
-$("#short-path").on("click", function () {
-    params = $("#selector-form").serialize();
-
-    myChart.showLoading();
-
-    $.ajax({
-        url: "/getPath",
-        type: "get",
-        data: {
-            "s_label": "Engineer", "s_key": "id", "s_value": 1964,
-            "t_label": "Teacher", "t_key": "id", "t_value": 137339
-        },
-        dataType: "json",
-        success: function (data) {
-            console.log("success", data);
-            reloadGraph(PathGraphOption, data);
-        },
-        error: function (error) {
-            console.error(error);
-            myChart.hideLoading();
-        }
-    })
-});
+// $("#short-path").on("click", function () {
+//     params = $("#selector-form").serialize();
+//
+//     myChart.showLoading();
+//
+//     $.ajax({
+//         url: "/getPath",
+//         type: "get",
+//         data: {
+//             "s_label": "Engineer", "s_key": "id", "s_value": 1964,
+//             "t_label": "Teacher", "t_key": "id", "t_value": 137339
+//         },
+//         dataType: "json",
+//         success: function (data) {
+//             console.log("success", data);
+//             reloadGraph(PathGraphOption, data);
+//         },
+//         error: function (error) {
+//             console.error(error);
+//             myChart.hideLoading();
+//         }
+//     })
+// });
 
 
 /**

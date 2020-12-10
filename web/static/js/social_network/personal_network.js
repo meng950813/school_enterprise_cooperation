@@ -230,7 +230,7 @@ let PersonalNetworkOption = {
 
 function getData() {
     $.ajax({
-        url: "/recommend-graph/getPersonalNetwork",
+        url: "/getPersonalNetwork",
         dataType: "json",
         success: function (res) {
             if (res.success === false) {

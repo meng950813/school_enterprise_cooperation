@@ -1,8 +1,34 @@
 """
 获取推荐数据
 """
-from web.settings import RELATION
+from web.settings import RELATION, LABEL
 from web.utils.neo4j_operator import neo4j as neo4j
+
+
+def getUserInfo(userid, label=LABEL["areaAGENT"]):
+    """
+    根据 用户id 获取用户信息
+    :param userid: int or str
+    :param label: Agent_Area or Agent_University
+    :return: [{"id": 19036, "name": "清华大学"}, ...] or []
+    """
+    cql = "match (agent:{label})-[:work]-()-[:include]-(org) " \
+          "where agent.id='{userid}' " \
+          "return org.id as id, org.name as name".format(label=label, userid=userid)
+    return neo4j.run(cql)
+
+
+def getUsefulTowns(userid):
+    """
+    获取可选择区镇
+    :return: [{"id": 2, "name": "开发区"}]
+    """
+    cql = "match (areaAgent:{areaAgent})-[:partner]-(uniAgent:{uniAgent})-[:work]-()-[:include]-(t:Town) " \
+          "where areaAgent.id='{userid}' " \
+          "with distinct(t) as town" \
+          "return town.id as id, town.name as name"\
+        .format(areaAgent=LABEL["areaAGENT"], uniAgent=LABEL["uniAGENT"], userid=userid)
+    return neo4j.run(cql)
 
 
 def getOrgId(label, name):

@@ -172,7 +172,6 @@ function edgeClickEvent(data) {
         let redirect = document.createElement("a");
         redirect.href = `/detail?s=${data.source}&t=${data.target}`;
         redirect.target = "_blank";
-        debugger
         redirect.click();
     }
 }
