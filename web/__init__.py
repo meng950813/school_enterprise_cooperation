@@ -5,15 +5,14 @@ from flask.logging import default_handler
 from flask import Flask, render_template, current_app, url_for, request
 from logging.handlers import RotatingFileHandler
 
-from flask_oidc import OpenIDConnect
-
-from web.extensions import bootstrap, csrf
+from web.extensions import bootstrap, csrf, oidc
 
 from web.settings import configuration
 
 # 校企合作相关
-from web.blueprints.social_network.recommend import recommend_bp as recommend_bp
-from web.blueprints.social_network.recommend_graph import recommend_graph_bp as recommend_graph_bp
+from web.blueprints.social_network.index import index_bp as index_bp
+from web.blueprints.social_network.recommend2Area import recommend2Area_bp as recommend2Area_bp
+from web.blueprints.social_network.recommend2University import recommend2University_bp as recommend2University_bp
 from web.blueprints.social_network.recommend_detail import recommend_detail_bp as recommend_detail_bp
 from web.blueprints.social_network.link_path import link_path_bp as link_path_bp
 
@@ -40,7 +39,7 @@ def create_app(config_name=None):
     register_template_filter(app)
 
     # 注册 keycloak
-    OpenIDConnect().init_app(app)
+    oidc.init_app(app)
 
     return app
 
@@ -66,12 +65,11 @@ def register_extensions(app):
 
 def register_blueprints(app):
     # 校企合作相关
-    app.register_blueprint(recommend_graph_bp)  # TODO
-    app.register_blueprint(recommend_graph_bp, url_prefix="/recommend-graph")
+    app.register_blueprint(index_bp)  # TODO
+    app.register_blueprint(recommend2Area_bp, url_prefix="/recommend2Area")
+    app.register_blueprint(recommend2University_bp, url_prefix="/recommend2Uni")
     app.register_blueprint(recommend_detail_bp, url_prefix="/detail")
     app.register_blueprint(link_path_bp, url_prefix="/link-path")
-    # TODO to be delete
-    app.register_blueprint(recommend_bp, url_prefix="/recommend")
 
 
 def register_template_context(app):
