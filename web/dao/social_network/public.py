@@ -23,9 +23,9 @@ def getUsefulTowns(userid):
     获取可选择区镇
     :return: [{"id": 2, "name": "开发区"}]
     """
-    cql = "match (areaAgent:{areaAgent})-[:partner]-(uniAgent:{uniAgent})-[:work]-()-[:include]-(t:Town) " \
-          "where areaAgent.id='{userid}' " \
-          "with distinct(t) as town" \
+    cql = "match (uniAgent:{uniAgent})-[:partner]-(areaAgent:{areaAgent})-[:work]-()-[:include]-(t:Town) " \
+          "where uniAgent.id='{userid}' " \
+          "with distinct(t) as town " \
           "return town.id as id, town.name as name"\
         .format(areaAgent=LABEL["areaAGENT"], uniAgent=LABEL["uniAGENT"], userid=userid)
     return neo4j.run(cql)
