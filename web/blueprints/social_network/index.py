@@ -31,12 +31,18 @@ def logout():
     return redirect(url_for('index.index'))
 
 
-@index_bp.route("/org-info")
-@oidc.require_login
-def getOrgInfo():
+@index_bp.route("/fuzzy-org")
+def fuzzyMatchOrg():
     name = request.args.get("name", default="")
     org_type = request.args.get("type", default="")
-    return public_service.getOrgId(label=org_type, name=name)
+    return public_service.fuzzyMatchOrg(label=org_type, name=name)
+
+
+@index_bp.route("/fuzzy-teacher")
+def fuzzyMatchTeacher():
+    name = request.args.get("name", default="")
+    uni = request.args.get("uni", default=0, type=int)
+    return public_service.fuzzyMatchTeacher(uni=uni, name=name)
 
 
 @index_bp.route("/personal-network")
@@ -48,7 +54,6 @@ def personalNetwork():
 @index_bp.route("/getPersonalNetwork")
 @oidc.require_login
 def getPersonalNetwork():
-    # TODO 动态获取中介 id 及 类型
     agent_id = auth.getUserId()
     agent_type = "uni" if auth.require_role("KETD", "技转中心") else "area"
     return personal_service.getPersonalNetwork(agent_id=agent_id, agent_type=agent_type)

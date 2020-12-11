@@ -26,12 +26,12 @@ def getUsefulTowns(userid):
     cql = "match (uniAgent:{uniAgent})-[:partner]-(areaAgent:{areaAgent})-[:work]-()-[:include]-(t:Town) " \
           "where uniAgent.id='{userid}' " \
           "with distinct(t) as town " \
-          "return town.id as id, town.name as name"\
+          "return town.id as id, town.name as name" \
         .format(areaAgent=LABEL["areaAGENT"], uniAgent=LABEL["uniAGENT"], userid=userid)
     return neo4j.run(cql)
 
 
-def getOrgId(label, name):
+def fuzzyMatchOrg(label, name):
     """
     根据组织机构名，获取对应id
     :param label:
@@ -40,6 +40,20 @@ def getOrgId(label, name):
     """
     cql = """match (node:{label}) where node.name=~".*{name}.*" """ \
           """return node.id as id, node.name as name limit 5""".format(label=label, name=name)
+    return neo4j.run(cql)
+
+
+def fuzzyMatchTeacher(uni_id, name):
+    """
+    根据教师名， 模糊匹配
+    :param uni_id: int
+    :param name:
+    :return:
+    """
+    cql = """match (u:{uni})-[:include]-(i:{inst})-[:include]-(t:{teacher})""" \
+          """where u.id={uni_id} and t.name=~".*{name}.*" """ \
+          """return t.id as id, t.name as name, i.name as institution limit 5""" \
+        .format(uni=LABEL["UNIVERSITY"], inst=LABEL["INSTITUTION"], teacher=LABEL["TEACHER"], uni_id=uni_id, name=name)
     return neo4j.run(cql)
 
 

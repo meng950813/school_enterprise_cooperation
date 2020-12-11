@@ -21,11 +21,11 @@ def getUsefulTowns(userid):
     return public_dao.getUsefulTowns(userid=userid)
 
 
-def getOrgId(label, name):
+def fuzzyMatchOrg(label, name):
     """
     根据组织机构名，获取对应id
-    :param label: String类型， c => Company, u => University, town => Town
-    :param name:
+    :param label: str， c => Company, u => University, town => Town
+    :param name: str, eg: 大学
     :return: {success=True or False, data=[] or [{id, name}, ...], message="xxx"}
     """
     label = transformOrg(label)
@@ -33,8 +33,27 @@ def getOrgId(label, name):
         return returnResult(success=False, message="组织机构类型错误")
     if not name or 0 == len(name.strip()):
         return returnResult(success=False, message="组织机构名称不能为空")
-    data = public_dao.getOrgId(label=label, name=name)
+    data = public_dao.fuzzyMatchOrg(label=label, name=name)
     return returnResult(success=True, data=data)
+
+
+def fuzzyMatchTeacher(uni, name):
+    """
+    根据传入的专家名 & 高校， 获取其对应的专家
+    :param uni: int
+    :param name: str eg: "张"
+    :return:  {success=True or False, data=[] or [{id, name}, ...], message="xxx"}
+    """
+    if not isinstance(uni, int) or uni <= 0:
+        return returnResult(success=False, message="高校值不合法")
+    if not isinstance(name, str) or 0 == len(name):
+        return returnResult(success=False, message="专家信息错误")
+    data = public_dao.fuzzyMatchTeacher(uni_id=uni, name=name)
+    res = [
+        {"id": item["id"], "name": "%s - %s" % (item["name"], item["institution"])}
+        for item in data
+    ]
+    return returnResult(success=True, data=res)
 
 
 def getUniversityList(limit=100):

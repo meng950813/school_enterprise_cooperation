@@ -9,7 +9,7 @@ $(".fuzzy-matching").on("input", debounce((e) => {
         return false;
     }
     $.ajax({
-        url: "/org-info",
+        url: "/fuzzy-org",
         data: {"name": val, "type": org_type},
         dataType: "json",
         success: function (res) {
@@ -17,6 +17,32 @@ $(".fuzzy-matching").on("input", debounce((e) => {
                 toggle_alert(false, res.message);
                 return false;
             }
+            show_item_list($input, res.data);
+        },
+        error: function (error) {
+            console.error(error);
+            return false;
+        }
+    });
+}, 500));
+
+
+$(".fuzzy-matching-teacher").on("input", debounce((e) => {
+    let $input = $(e.target);
+    let val = $input.val();
+    if (!val || val.trim().length === 0) {
+        return false;
+    }
+    $.ajax({
+        url: "/fuzzy-teacher",
+        data: {"name": val, "uni": $("#university").val()},
+        dataType: "json",
+        success: function (res) {
+            if (res.success === false) {
+                toggle_alert(false, res.message);
+                return false;
+            }
+            debugger
             show_item_list($input, res.data);
         },
         error: function (error) {
@@ -107,7 +133,7 @@ function sendRecommendRequest(data, graphContainer) {
             toggle_alert(false, "获取数据失败，请稍后再试");
             return false;
         },
-        complete: function (){
+        complete: function () {
             graphContainer.hideLoading();
         }
     });
