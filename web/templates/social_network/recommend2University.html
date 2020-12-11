@@ -11,12 +11,28 @@
         <div class="row">
             <div class="form-group col-12">
                 <label for="university_name">负责高校</label>
-                <select name="town" id="town" class="form-control">
+                <select name="university" id="university" class="form-control">
                     {% for university in universities %}
                         <option value="{{ university['id'] }}">{{ university["name"] }}</option>
                     {% endfor %}
                 </select>
             </div>
+
+            <div class="form-group col-12">
+                <label for="company_name">选择专家</label>
+                <div class="input-group">
+                    <input type="text" class="form-control fuzzy-matching" data-org-type="teq" id="teacher_name"
+                           name="teacher_name" placeholder="请输入专家名称">
+                    <ul class="list-group show-items"></ul>
+                </div>
+                <div class="col-12 tag-list teacher-tags">
+                    {#                        <label class="btn btn-dark">#}
+                    {#                            <span class="tag" data-id="123">${value}</span>#}
+                    {#                            <i class="mdui-icon material-icons remove-tag" style="cursor: pointer">&#xe14c;</i>#}
+                    {#                        </label>#}
+                </div>
+            </div>
+
             <div class="form-group col-12">
                 <label for="town">区镇</label>
                 <select name="town" id="town" class="form-control">
@@ -94,6 +110,20 @@
     <script src="{{ url_for('static', filename='js/social_network/recommend_graph_event.js') }}"></script>
 
     <script>
+         /**
+         * 查询表单的提交事件
+         */
+        $("#selector-submit").on("click", function () {
+            let form_data = {
+                "town": $("#town").val(),
+                "com": get_tags_id($(".company-tags .tag")),
+                "uni": $("#university").val(),
+                "teacher": get_tags_id($(".teacher-tags .tag")),
+                "limit": $("#search-number").val()
+            }
+            sendRecommendRequest(form_data, ChartArrayGraph);
+        })
+
         sendRecommendRequest({"uni": "19036", "town": 2}, ChartArrayGraph);
     </script>
 {% endblock %}

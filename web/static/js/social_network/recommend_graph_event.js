@@ -92,7 +92,7 @@ function sendRecommendRequest(data, graphContainer) {
     graphContainer.showLoading();
     $.ajax({
         type: "get",
-        url: "/recommend2Area/recommend",
+        url: "/recommend",
         data: data,
         success: function (res) {
             if (res.success === false) {

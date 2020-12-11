@@ -11,7 +11,7 @@ recommend2University_bp = Blueprint('recommend2University', __name__)
 @recommend2University_bp.route("/")
 @recommend2University_bp.route("/index")
 @oidc.require_login
-@oidc.require_keycloak_role('KETD', "技转中心")
+# @oidc.require_keycloak_role('KETD', "技转中心")
 def index():
     user_id = auth.getUserId()
     # orgs = [{"id": 19036, "name": "清华大学"}]
@@ -20,14 +20,4 @@ def index():
     return render_template("/social_network/recommend2University.html", universities=universities, towns=towns)
 
 
-@recommend2University_bp.route("/recommend")
-@oidc.require_login
-@oidc.require_keycloak_role('KETD', "技转中心")
-def recommendResult():
-    town_id = request.args.get("town", default="", type=str)
-    com_id = request.args.get("com", default="", type=str)
-    uni_id = request.args.get("uni", default="", type=str)
-    limit = request.args.get("limit", default=15, type=int)
-    # TODO
-    return recommend2Area_service.recommendResult(town_id=town_id, com_id=com_id, uni_id=uni_id, limit=limit)
 

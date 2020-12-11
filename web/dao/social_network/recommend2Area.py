@@ -14,13 +14,13 @@ from web.utils.neo4j_operator import neo4j as neo4j
 def recommendUniversityAndCompany(town_id, limit=20):
     """
     根据选定区域id，向指定区域推荐 企业 和 高校
-    :param town_id: int
+    :param town_id: list
     :param limit:
     :return: [{town_id, town_name, c_id, c_name, u_id, u_name, weight}, ...]
         # {col0_id, col0_name, col1_id, col1_name, col2_id, col2_name, weight}
     """
     cql = "match (town:Town)-[:locate]-(c:Company)-[r:{relation}]-(u:University) " \
-          "where town.id={town_id} " \
+          "where town.id in {town_id} " \
           "return town.id as town_id,town.name as town_name, c.id as c_id, c.name as c_name, " \
           "u.id as u_id, u.name as u_name, r.weight as weight " \
           "order by weight asc limit {limit}".format(relation=RELATION["CUSM"], town_id=town_id, limit=limit)
@@ -30,13 +30,13 @@ def recommendUniversityAndCompany(town_id, limit=20):
 def recommendInstitutionAndCompany(town_id, uni_id, limit=20):
     """
     根据选定区域的id、 以及选定高校的id, 推荐地区企业 和 高校学院
-    :param town_id: int
+    :param town_id: list [2, ...]
     :param uni_id: list [23, ..] or []
     :param limit:
     :return: [{town_id, town_name, c_id, c_name, i_id, i_name, u_id, u_name, weight)}]
     """
     cql = "match (town:Town)-[:locate]-(c:Company)-[r:{relation}]-(i:Institution)-[:include]-(u:University) " \
-          "where town.id = {town_id} and u.id in {uni_id} " \
+          "where town.id in {town_id} and u.id in {uni_id} " \
           "return town.id as town_id,town.name as town_name, c.id as c_id, c.name as c_name, " \
           "i.id as i_id, i.name as i_name, u.id as u_id, u.name as u_name, r.weight as weight " \
           "order by weight asc limit {limit}".format(relation=RELATION["CISM"], town_id=town_id, uni_id=uni_id, limit=limit)
@@ -53,12 +53,12 @@ def recommendInstitutionForCompany(company_id, limit=20):
     cql = "match (town:Town)-[:locate]-(c:Company)-[r:{relation}]-(i:Institution)-[:include]-(u:University) " \
           "where c.id in {company_id} " \
           "return town.id as town_id,town.name as town_name, c.id as c_id, c.name as c_name, " \
-          "i.id as i_id, i.name as i_name, u.id, u.name, r.weight as weight " \
+          "i.id as i_id, i.name as i_name, u.id as u_id, u.name as u_name, r.weight as weight " \
           "order by weight asc limit {limit}".format(relation=RELATION["CISM"], company_id=company_id, limit=limit)
     return neo4j.run(cql)
 
 
-def recommendEngineerAndTeacher(company_id, uni_id, limit=20):
+def recommendEngineerAndTeacherTeam(company_id, uni_id, limit=20):
     """
     选定企业和高校，推荐 工程师团队和专家团队
     :param company_id: list [123, 234, ...]

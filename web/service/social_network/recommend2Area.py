@@ -5,7 +5,7 @@ from web.dao.social_network import recommend2Area as recommend2Area_dao
 def recommendResult(town_id=None, com_id="", uni_id="", limit=20):
     """
     根据传入参数的不同组合，调用不同的处理部分， 返回统一格式的推荐结果
-    :param town_id: 区镇id, 整型
+    :param town_id: 区镇id, str类型，
     :param com_id: 企业id, str类型，多个企业id之间以 , 分割， eg:”123,234,345“
     :param uni_id: 高校id, str类型，多个id之间以 , 分割， eg:”321,453,465“
     :param limit:
@@ -19,39 +19,48 @@ def recommendResult(town_id=None, com_id="", uni_id="", limit=20):
         }
     }
     """
-    if not town_id or (isinstance(town_id, int) and town_id <= 0):
+    if not isinstance(town_id, str) or 0 == len(town_id):
         return public_service.returnResult(success=False, message="区镇值不正确")
+
+    towns = [int(t_id) for t_id in town_id.split(",")]
+
     if not isinstance(com_id, str) or 0 == len(com_id):  # 未传入 企业参数 或 参数格式不正确
         if not isinstance(uni_id, str) or 0 == len(uni_id):  # 未传入高校参数 或 参数格式不正确
             # ==> 只输入区镇信息， 为特定区域内的企业 推荐 适合合作的高校
-            return recommendUniversityAndCompany(town_id=town_id, limit=limit)
+            return recommendUniversityAndCompany(town_id=towns, limit=limit)
         else:  # 传入高校参数
             # ==> 指定地区和高校，推荐适合与当地企业合作的高校
-            return recommendInstitutionAndCompany(town_id=town_id, uni_id=uni_id, limit=limit)
+            uni_id_list = [int(u_id) for u_id in uni_id.split(",")]
+            return recommendInstitutionAndCompany(town_id=towns, uni_id=uni_id_list, limit=limit)
     else:  # 输入企业
+        comps = [int(c_id) for c_id in com_id.split(",")]
         if not isinstance(uni_id, str) or 0 == len(uni_id):  # 未传入高校参数 或 参数格式不正确
             # ==> 推荐与特定企业相匹配的高校学院
-            return recommendInstitutionForCompany(com_id=com_id, limit=limit)
+            return recommendInstitutionForCompany(com_id=comps, limit=limit)
         else:
             # ==> 推荐企业工程师和高校专家
-            return recommendEngineerAndTeacher(company_id=com_id, university_id=uni_id, limit=limit)
+            uni_id_list = [int(u_id) for u_id in uni_id.split(",")]
+            return recommendEngineerAndTeacherTeam(com_id=comps, uni_id=uni_id_list, limit=limit)
 
 
-def recommendUniversityAndCompany(town_id=None, limit=20):
+def recommendUniversityAndCompany(town_id=None, reverse=True, limit=20):
     """
     为特定区域内的企业 推荐 适合合作的高校
     :param town_id: 整型
+    :param reverse: True or False, 地区排列 与 高校排列 的顺序
     :param limit:
     :return:
     """
     records = recommend2Area_dao.recommendUniversityAndCompany(town_id=town_id, limit=limit)
-    return public_service.returnResult(success=True, data=formatRecommendUniversityAndCompany(records=records))
+    return public_service.returnResult(success=True,
+                                       data=formatRecommendUniversityAndCompany(records=records, reverse=reverse))
 
 
-def formatRecommendUniversityAndCompany(records):
+def formatRecommendUniversityAndCompany(records, reverse=True):
     """
     将 高校和企业的推荐结果 格式化
     :param records: [{town_id, town_name, c_id, c_name, u_id, u_name, weight}, ...]
+    :param reverse: True or False, 地区排列 与 高校排列 的顺序
     :return: {nodes, links, category}
     """
     nodes_town, nodes_com, nodes_uni = list(), list(), list()
@@ -75,32 +84,35 @@ def formatRecommendUniversityAndCompany(records):
         category_index = addCategory(category_list, category_map, node_id=record["u_id"], name=record["u_name"])
         addNode(node_set, nodes_uni, node_id=uni_id, category=category_index, label=record["u_name"])  # 添加高校节点
 
-        addLinks(links=links, source=com_id, target=uni_id, label=public_service.transformSimilarLabel(record["weight"]))
+        addLinks(links=links, source=com_id, target=uni_id,
+                 label=public_service.transformSimilarLabel(record["weight"]))
         # addLinks(links=links, source=com_id, target=uni_id, click=True, label=transformSimilarLabel(record["weight"]))
-
-    nodes = [nodes_town, nodes_com, [], nodes_uni]
+    if reverse:
+        nodes = [nodes_town, nodes_com, [], nodes_uni]
+    else:
+        nodes = [nodes_uni, [], nodes_com, nodes_town]
     return {"nodes": nodes, "links": links, "category": category_list}
 
 
-def recommendEngineerAndTeacher(company_id="", university_id="", limit=20):
+def recommendEngineerAndTeacherTeam(com_id, uni_id, reverse=True, limit=20):
     """
-
-    :param company_id: str类型，以 “,” 作为 分隔符， eg: "123，234，456"
-    :param university_id: String, eg: "123,456,345"
+    制定 高校 & 企业 推荐 专家团队 & 工程师团队
+    :param com_id: list, [] or [123,435...]
+    :param uni_id: list [] or [345, 5435,...]
+    :param reverse: True or False, 地区排列 与 高校排列 的顺序
     :param limit: 一次获取的数据量
     :return:
     """
-    com_id_list = [int(com_id) for com_id in company_id.split(",")]
-    uni_id_list = [int(uni_id) for uni_id in university_id.split(",")]
-
-    records = recommend2Area_dao.recommendEngineerAndTeacher(company_id=com_id_list, uni_id=uni_id_list, limit=limit)
-    return public_service.returnResult(success=True, data=formatRecommendEngineerAndTeacher(records=records))
+    records = recommend2Area_dao.recommendEngineerAndTeacherTeam(company_id=com_id, uni_id=uni_id, limit=limit)
+    return public_service.returnResult(success=True,
+                                       data=formatRecommendEngineerAndTeacher(records=records, reverse=reverse))
 
 
-def formatRecommendEngineerAndTeacher(records):
+def formatRecommendEngineerAndTeacher(records, reverse=True):
     """
     将 工程师团队和专家团队的推荐结果  格式化为前端可处理的数据格式
     :param records: [{c_id, c_name, e_id, e_name, t_id, t_name, i_id, i_name, u_id, u_name, weight)}]
+    :param reverse: True or False, 地区排列 与 高校排列 的顺序
     :return: {nodes, links, category}
     """
     nodes_com, nodes_engineer, nodes_teacher, nodes_institution, nodes_uni = list(), list(), list(), list(), list()
@@ -127,29 +139,36 @@ def formatRecommendEngineerAndTeacher(records):
         addLinks(links=links, source=u_id, target=i_id, category=category_index)  # 添加学校和学院的关系
         addLinks(links=links, source=i_id, target=t_id, category=category_index)  # 添加学院和专家的关系
         # 添加相似关系
-        addLinks(links=links, source=e_id, target=t_id, click=True, label=public_service.transformSimilarLabel(record["weight"]))
+        addLinks(links=links, source=e_id, target=t_id, click=True,
+                 label=public_service.transformSimilarLabel(record["weight"]))
 
-    nodes = [nodes_com, nodes_engineer, [], nodes_teacher, nodes_institution, nodes_uni]
+    if reverse:
+        nodes = [nodes_com, nodes_engineer, [], nodes_teacher, nodes_institution, nodes_uni]
+    else:
+        nodes = [nodes_uni, nodes_institution, nodes_teacher, [], nodes_engineer, nodes_com]
+
     return {"nodes": nodes, "links": links, "category": category_list}
 
 
-def recommendInstitutionAndCompany(town_id, uni_id, limit=20):
+def recommendInstitutionAndCompany(town_id, uni_id, reverse=True, limit=20):
     """
     根据选定区域的id、 以及选定高校的id, 推荐地区企业 和 高校学院
-    :param town_id:
+    :param town_id:list [2,3,4...]
     :param uni_id:
+    :param reverse: True or False, 地区排列 与 高校排列 的顺序
     :param limit:
     :return:
     """
-    uni_id_list = [int(uni_id) for uni_id in uni_id.split(",")]
-    records = recommend2Area_dao.recommendInstitutionAndCompany(town_id=town_id, uni_id=uni_id_list, limit=limit)
-    return public_service.returnResult(success=True, data=formatRecommendInstitutionAndCompany(records))
+    records = recommend2Area_dao.recommendInstitutionAndCompany(town_id=town_id, uni_id=uni_id, limit=limit)
+    return public_service.returnResult(success=True,
+                                       data=formatRecommendInstitutionAndCompany(records, reverse=reverse))
 
 
-def formatRecommendInstitutionAndCompany(records):
+def formatRecommendInstitutionAndCompany(records, reverse=True):
     """
     将 企业和特定学校的的推荐结果 格式化为前端可处理的数据格式
     :param records: [{town_id, town_name, c_id, c_name, i_id, i_name, u_id, u_name, weight)}]
+    :param reverse: True:地区排列 + 高校排列 , False: 高校排列 + 地区排列
     :return: {nodes, links, category}
     """
     nodes_town, nodes_com, nodes_institution, nodes_uni = list(), list(), list(), list()
@@ -175,21 +194,24 @@ def formatRecommendInstitutionAndCompany(records):
         addNode(node_set, nodes_institution, node_id=i_id, category=category_index, label=record["i_name"])  # 添加学院节点
         addLinks(links=links, source=uni_id, target=i_id, category=category_index)  # 添加学校和学院的关系
 
-        addLinks(links=links, source=com_id, target=i_id, label=public_service.transformSimilarLabel(record["weight"]))  # 添加相似关系
+        addLinks(links=links, source=com_id, target=i_id,
+                 label=public_service.transformSimilarLabel(record["weight"]))  # 添加相似关系
 
-    nodes = [nodes_town, nodes_com, [], nodes_institution, nodes_uni]
+    if reverse:
+        nodes = [nodes_town, nodes_com, [], nodes_institution, nodes_uni]
+    else:
+        nodes = [nodes_uni, nodes_institution, [], nodes_com, nodes_town]
     return {"nodes": nodes, "links": links, "category": category_list}
 
 
 def recommendInstitutionForCompany(com_id, limit=20):
     """
     根据企业id， 为特定企业推荐 高校学院
-    :param com_id: str "123,234,..."
+    :param com_id: list [2,3,4...]
     :param limit:
     :return:
     """
-    com_id_list = [int(uni_id) for uni_id in com_id.split(",")]
-    records = recommend2Area_dao.recommendInstitutionForCompany(company_id=com_id_list, limit=limit)
+    records = recommend2Area_dao.recommendInstitutionForCompany(company_id=com_id, limit=limit)
     return public_service.returnResult(success=True, data=formatRecommendInstitutionAndCompany(records))
 
 

@@ -13,8 +13,8 @@
             <div class="form-group col-12">
                 <label for="town">区镇</label>
                 <select name="town" id="town" class="form-control">
-                    {% for org in orgs %}
-                        <option value="{{ org['id'] }}">{{ org["name"] }}</option>
+                    {% for town in towns %}
+                        <option value="{{ town['id'] }}">{{ town["name"] }}</option>
                     {% endfor %}
                 </select>
             </div>
