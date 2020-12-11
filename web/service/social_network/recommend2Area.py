@@ -2,16 +2,31 @@ from web.service.social_network import public as public_service
 from web.dao.social_network import recommend2Area as recommend2Area_dao
 
 
-def recommendResult(town_id="", com_id="", uni_id="", limit=20):
+def recommendResult(town_id=None, com_id="", uni_id="", limit=20):
+    """
+    根据传入参数的不同组合，调用不同的处理部分， 返回统一格式的推荐结果
+    :param town_id: 区镇id, 整型
+    :param com_id: 企业id, str类型，多个企业id之间以 , 分割， eg:”123,234,345“
+    :param uni_id: 高校id, str类型，多个id之间以 , 分割， eg:”321,453,465“
+    :param limit:
+    :return: {
+        success: True or False
+        data: {
+            # 此处使用二维数组存储 nodes, len(nodes) 表示共有多少列节点， len(nodes[i]) 表示 第 i 列有多少节点
+            nodes:[[{node prop}], [...], ...]
+            links: [{source: xx, target:xxx, others: xxx}, ...]
+            category: [{name: xxx}]
+        }
+    }
+    """
     if not town_id or (isinstance(town_id, int) and town_id <= 0):
         return public_service.returnResult(success=False, message="区镇值不正确")
     if not isinstance(com_id, str) or 0 == len(com_id):  # 未传入 企业参数 或 参数格式不正确
-
         if not isinstance(uni_id, str) or 0 == len(uni_id):  # 未传入高校参数 或 参数格式不正确
-            # ==> 只输入区镇信息
+            # ==> 只输入区镇信息， 为特定区域内的企业 推荐 适合合作的高校
             return recommendUniversityAndCompany(town_id=town_id, limit=limit)
         else:  # 传入高校参数
-            # ==> 推荐 适合于特定高校合作的企业
+            # ==> 指定地区和高校，推荐适合与当地企业合作的高校
             return recommendInstitutionAndCompany(town_id=town_id, uni_id=uni_id, limit=limit)
     else:  # 输入企业
         if not isinstance(uni_id, str) or 0 == len(uni_id):  # 未传入高校参数 或 参数格式不正确
@@ -33,8 +48,8 @@ def transformSimilarLabel(value):
 
 def recommendUniversityAndCompany(town_id=None, limit=20):
     """
-
-    :param town_id:
+    为特定区域内的企业 推荐 适合合作的高校
+    :param town_id: 整型
     :param limit:
     :return:
     """
