@@ -108,3 +108,12 @@ def returnResult(success=True, data=None, message="", **kwargs):
     if not success:
         return {"success": success, "message": message, **kwargs}
     return {"success": success, "data": data, **kwargs}
+
+
+def transformSimilarLabel(value):
+    """
+    格式化相似度
+    :param value: float [0,1)
+    :return: 技术相似度： 98.90%
+    """
+    return '技术相似度： %.2f' % ((1 - value) * 100) + "%"
