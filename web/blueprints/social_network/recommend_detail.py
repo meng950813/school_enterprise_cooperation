@@ -1,12 +1,14 @@
 from flask import Blueprint, render_template, request, abort
 from web.service.social_network import public as public_service
 from web.service.social_network import recommend_detail as detail_service
+from web.extensions import oidc
 
 recommend_detail_bp = Blueprint('recommend_detail', __name__)
 
 
 @recommend_detail_bp.route("/", methods=["GET"])
 @recommend_detail_bp.route("/index", methods=["GET"])
+@oidc.require_login
 def index():
     source = request.args.get("s", default="", type=str)
     target = request.args.get("t", default="", type=str)
@@ -40,6 +42,7 @@ def compareTeacherAndEngineerTeam(source, target):
 
 
 @recommend_detail_bp.route("/technicalFieldComparison")
+@oidc.require_login
 def technicalFieldComparison():
     eid = request.args.get("eid", default=None, type=int)
     tid = request.args.get("tid", default=None, type=int)
@@ -48,6 +51,7 @@ def technicalFieldComparison():
 
 
 @recommend_detail_bp.route("/teamMembers")
+@oidc.require_login
 def getTeamMembers():
     eid = request.args.get("eid", default=None, type=int)
     tid = request.args.get("tid", default=None, type=int)

@@ -23,12 +23,14 @@ def index():
 
 
 @index_bp.route("/logout")
+@oidc.require_login
 def logout():
     oidc.logout()
     return redirect(url_for('index.index'))
 
 
 @index_bp.route("/org-info")
+@oidc.require_login
 def getOrgInfo():
     name = request.args.get("name", default="")
     org_type = request.args.get("type", default="")
