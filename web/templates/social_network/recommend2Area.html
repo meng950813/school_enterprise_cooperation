@@ -81,6 +81,24 @@
     <div id="array-graph-chart-container">
         <div id="array-graph-chart"></div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade show" id="linkPathModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="linkPathModalLabel">联络路径</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body chart p-0">
+                    <div id="link-path-chart" style="width: 600px; height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -102,6 +120,7 @@
     <script src="{{ url_for('static', filename='js/statistics/create_graph.js') }}"></script>
     <script src="{{ url_for('static', filename='js/social_network/recommend2Area.js') }}"></script>
     <script src="{{ url_for('static', filename='js/social_network/recommend_graph_event.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/social_network/link_path.js') }}"></script>
 
     <script>
         /**
@@ -118,5 +137,6 @@
         })
 
         sendRecommendRequest({"uni": "19036", "town": 2}, ChartArrayGraph);
+        registerNodeClickEvent(ChartArrayGraph);
     </script>
 {% endblock %}
