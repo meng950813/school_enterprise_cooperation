@@ -129,10 +129,15 @@ def returnResult(success=True, data=None, message="", **kwargs):
     return {"success": success, "data": data, **kwargs}
 
 
-def transformSimilarLabel(value):
+def transformSimilarLabel(value, click=False):
     """
     格式化相似度
     :param value: float [0,1)
+    :param click: True or False
     :return: 技术相似度： 98.90%
     """
-    return '技术相似度： %.2f' % ((1 - value) * 100) + "%"
+    precent = round((1 - value) * 100, 2)
+    if click:
+        return "技术相似度： {p}% <br>点击查看详细对比".format(p=precent)
+    else:
+        return "技术相似度： {p}%".format(p=precent)
