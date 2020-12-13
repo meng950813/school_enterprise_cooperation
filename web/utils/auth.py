@@ -12,6 +12,22 @@ def getUserId():
     return g.oidc_id_token['preferred_username']
 
 
+def isUniversityAgent():
+    """
+    判断当前用户是否为高校技转中心中介
+    :return:  True or False
+    """
+    return require_role("KETD", "技转中心")
+
+
+def isAreaAgent():
+    """
+    判断当前用户是否为 地区中介用户
+    :return: True or False
+    """
+    return require_role("KETD", "孵化器")
+
+
 def require_role(client, role):
     """
     判断当前用户是否拥有特定角色
