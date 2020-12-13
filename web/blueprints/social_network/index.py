@@ -5,7 +5,6 @@ from web.service.social_network import recommend2University as recommend2Univers
 from web.service.social_network import recommend2Area as recommend2Area_service
 from web.extensions import oidc
 from web.utils import auth
-import requests
 
 index_bp = Blueprint('index', __name__)
 
@@ -14,10 +13,10 @@ index_bp = Blueprint('index', __name__)
 @index_bp.route("/index")
 @oidc.require_login
 def index():
-    if auth.require_role("KETD", "技转中心"):
+    if auth.isUniversityAgent():
         # 高校技转中心用户
         return redirect(url_for("recommend2University.index"))
-    elif auth.require_role("KETD", "孵化器"):
+    elif auth.isAreaAgent():
         # 地区中介用户
         return redirect(url_for("recommend2Area.index"))
     else:
