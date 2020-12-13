@@ -15,8 +15,8 @@ def addContactInformation(start_node, target_node, visited=0, cooperate=0, activ
     relationship = RELATION["KNOWS"]
     relation = neo4j.search_relationship(start_node=start_node, target_node=target_node, relationship=relationship)
     if relation is None:
-        return neo4j.create_relationship(start_node=start_node, target_node=target_node, relationship=relationship,
-                                         visited=visited, cooperate=cooperate, activity=activity)
+        return neo4j.create_one_relationship(start_node=start_node, target_node=target_node, relationship=relationship,
+                                             visited=visited, cooperate=cooperate, activity=activity)
     else:
         return neo4j.update_one_relationship(start_node=start_node, target_node=target_node, relation=relation,
                                              cover=False, visited=visited, cooperate=cooperate, activity=activity)

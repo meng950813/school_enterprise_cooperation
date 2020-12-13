@@ -45,7 +45,7 @@ def fuzzyMatchTeacher(uni, name):
     :return:  {success=True or False, data=[] or [{id, name}, ...], message="xxx"}
     """
     if not isinstance(uni, int) or uni <= 0:
-        return returnResult(success=False, message="高校值不合法")
+        return returnResult(success=False, message="高校信息不正确")
     if not isinstance(name, str) or 0 == len(name):
         return returnResult(success=False, message="专家信息错误")
     data = public_dao.fuzzyMatchTeacher(uni_id=uni, name=name)
@@ -54,6 +54,21 @@ def fuzzyMatchTeacher(uni, name):
         for item in data
     ]
     return returnResult(success=True, data=res)
+
+
+def fuzzyMatchEngineer(com, name):
+    """
+    根据传入的工程师名 & 企业， 获取其对应的工程师
+    :param com: int
+    :param name: str eg: "张"
+    :return:  {success=True or False, data=[] or [{id, name}, ...], message="xxx"}
+    """
+    if not isinstance(com, int) or com <= 0:
+        return returnResult(success=False, message="企业信息不正确")
+    if not isinstance(name, str) or 0 == len(name):
+        return returnResult(success=False, message="工程师信息错误")
+    data = public_dao.fuzzyMatchEngineer(com_id=com, name=name)
+    return returnResult(success=True, data=data)
 
 
 def getUniversityList(limit=100):

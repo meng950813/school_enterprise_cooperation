@@ -1,8 +1,9 @@
-from flask import Blueprint, redirect, url_for, abort, request, render_template
+from flask import Blueprint, redirect, url_for, abort, request, render_template, flash
 from web.service.social_network import public as public_service
 from web.service.social_network import personal_network as personal_service
 from web.service.social_network import recommend2University as recommend2University_service
 from web.service.social_network import recommend2Area as recommend2Area_service
+from web.service.social_network import api as api_service
 from web.extensions import oidc
 from web.utils import auth
 
@@ -37,25 +38,18 @@ def fuzzyMatchOrg():
     return public_service.fuzzyMatchOrg(label=org_type, name=name)
 
 
+@index_bp.route("/fuzzy-engineer")
+def fuzzyMatchEngineer():
+    name = request.args.get("name", default="")
+    com = request.args.get("com", default=0, type=int)
+    return public_service.fuzzyMatchEngineer(com=com, name=name)
+
+
 @index_bp.route("/fuzzy-teacher")
 def fuzzyMatchTeacher():
     name = request.args.get("name", default="")
     uni = request.args.get("uni", default=0, type=int)
     return public_service.fuzzyMatchTeacher(uni=uni, name=name)
-
-
-@index_bp.route("/personal-network")
-@oidc.require_login
-def personalNetwork():
-    return render_template("social_network/personal_network.html")
-
-
-@index_bp.route("/getPersonalNetwork")
-@oidc.require_login
-def getPersonalNetwork():
-    agent_id = auth.getUserId()
-    agent_type = "uni" if auth.require_role("KETD", "技转中心") else "area"
-    return personal_service.getPersonalNetwork(agent_id=agent_id, agent_type=agent_type)
 
 
 @index_bp.route("/recommend")
@@ -73,3 +67,51 @@ def recommendResult():
     else:
         # 地区中介用户
         return recommend2Area_service.recommendResult(town_id=town_id, com_id=com_id, uni_id=uni_id, limit=limit)
+
+
+@index_bp.route("/personal-network")
+@oidc.require_login
+def personalNetwork():
+    if auth.isAreaAgent():
+        return render_template("social_network/personal_network.html", area=True)
+    else:
+        user_id = auth.getUserId()
+        universities = public_service.getUserInfo(userid=user_id, area_agent=False)
+        return render_template("social_network/personal_network.html", area=False, universities=universities)
+
+
+@index_bp.route("/getPersonalNetwork")
+@oidc.require_login
+def getPersonalNetwork():
+    agent_id = auth.getUserId()
+    agent_type = "uni" if auth.require_role("KETD", "技转中心") else "area"
+    return personal_service.getPersonalNetwork(agent_id=agent_id, agent_type=agent_type)
+
+
+@index_bp.route("/addContactInformation", methods=["POST"])
+@oidc.require_login
+def addContactInformation():
+    agent_id = auth.getUserId()
+    agent_type = "uni" if auth.require_role("KETD", "技转中心") else "area"
+    target_id = request.form.get("target-id", default=0, type=int)
+    target_type = request.form.get("target-type", default="", type=str)
+    method = request.form.get("cooper-method", default="visit", type=str)
+    datetime = request.form.get("datetime", default="", type=str)
+    visited, cooperate, activity = 0, 0, 0
+    if "active" == method:
+        activity += 1
+    elif "coop" == method:
+        cooperate += 1
+    elif "visit" == method:
+        visited += 1
+    else:
+        flash(message="请选择正确的活动类型", category="error")
+        return redirect(url_for("index.personalNetwork"))
+    result = api_service.addContactInformation(agent_id=agent_id, agent_type=agent_type, target_id=target_id,
+                                               target_type=target_type, visited=visited, cooperate=cooperate,
+                                               activity=activity)
+    if result["success"]:
+        flash(message="添加成功", category="success")
+    else:
+        flash(message=result["message"], category="error")
+    return redirect(url_for("index.personalNetwork"))

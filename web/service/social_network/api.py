@@ -7,7 +7,7 @@ def addContactInformation(agent_id=0, agent_type="area", target_id=0, target_typ
                           activity=0):
     """
     创建/更新 中介与 专家/工程师之间的关系
-    :param agent_id: int 中介 id
+    :param agent_id: str 中介 id
     :param agent_type: str 中介类型 :area ==> Agent_Area or uni ==>  Agent_University
     :param target_id: int 目标节点 id
     :param target_type: str 目标节点类型类型: teacher ==> Teacher or engineer ==> Engineer
@@ -17,16 +17,13 @@ def addContactInformation(agent_id=0, agent_type="area", target_id=0, target_typ
     :return : dict {success: True or False, message: xxx}
     """
     agent_label = public_service.transformUser(user=agent_type)
-    if (not isinstance(agent_id, int)) or agent_id < 1 or agent_type is None:
-        return public_service.returnResult(success=False, message="中介参数不正确")
-
     target_label = public_service.transformUser(user=target_type)
     if (not isinstance(target_id, int)) or target_id < 1 or target_label is None:
         return public_service.returnResult(success=False, message="目标节点参数不正确")
 
     start_node = neo4j.search_node(search_dict={"label": agent_label, "search": {"id": agent_id}})
     if start_node is None:
-        return public_service.returnResult(success=False, message="源点信息有误")
+        return public_service.returnResult(success=False, message="用户信息有误")
 
     target_node = neo4j.search_node({"label": target_label, "search": {"id": target_id}})
     if target_node is None:

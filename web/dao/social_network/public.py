@@ -57,6 +57,20 @@ def fuzzyMatchTeacher(uni_id, name):
     return neo4j.run(cql)
 
 
+def fuzzyMatchEngineer(com_id, name):
+    """
+    根据工程师名 & 企业id, 模糊匹配
+    :param com_id: int
+    :param name:
+    :return:
+    """
+    cql = """match (c:{com})-[:employ]-(e:{engineer})""" \
+          """where c.id={com_id} and e.name=~".*{name}.*" """ \
+          """return e.id as id, e.name as name limit 5""" \
+        .format(com=LABEL["COMPANY"], engineer=LABEL["ENGINEER"], com_id=com_id, name=name)
+    return neo4j.run(cql)
+
+
 def getUniversityList(limit=100):
     cql = "match (u:University) where u.teachers > 0 return u.id as id, u.name as name  " \
           "order by u.teachers desc limit {limit}".format(limit=limit)

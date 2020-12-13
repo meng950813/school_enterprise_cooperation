@@ -2,28 +2,83 @@
 
 {% block title %} 校企合作推荐 {% endblock %}
 
-{% block sidebar %}
-    <form action="">
-        <div class="row">
-            <div class="form-group col-12">
-                <label for="company_name">选择企业/高校</label>
-                <div class="input-group">
-                    <input type="text" class="form-control fuzzy-matching" data-org-type="c" id="company_name"
-                           name="company_name" placeholder="请输入名称">
-                    <ul class="list-group show-items"></ul>
-                </div>
-            </div>
-            <div class="form-group col-12">
-                <label for="company_name">选择人员</label>
-                <div class="input-group">
-                    <input type="text" class="form-control fuzzy-matching" data-org-type="c" id="person_name"
-                           name="person_name" placeholder="请输入人员名称">
-                    <ul class="list-group show-items"></ul>
-                </div>
-            </div>
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/social_network/array_graph.css') }}">
+{% endblock %}
 
+{% block sidebar %}
+    <form action="/addContactInformation" method="post">
+        <div class="row">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% if area %}
+                <div class="form-group col-12">
+                    <label for="company_name">选择企业</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control fuzzy-matching" data-target="com-id" data-org-type="c" placeholder="请输入名称">
+                        <ul class="list-group show-items"></ul>
+                        <input type="hidden" id="com-id">
+                    </div>
+                </div>
+                <div class="form-group col-12">
+                    <label for="company_name">选择人员</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control fuzzy-matching-engineer" data-target="target-id"
+                               placeholder="请输入人员名称" required>
+                        <ul class="list-group show-items"></ul>
+                        <input type="hidden" name="target-id" id="target-id">
+                        <input type="hidden" name="target-type" value="engineer">
+                    </div>
+                </div>
+            {% else %}
+                <div class="form-group col-12">
+                    <label for="company_name">选择高校</label>
+                    <select id="university" class="form-control" required>
+                        {% for university in universities %}
+                            <option value="{{ university['id'] }}">{{ university["name"] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-12">
+                    <label for="company_name">选择专家</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control fuzzy-matching-teacher" data-target="target-id"
+                               placeholder="请输入人员名称" required>
+                        <ul class="list-group show-items"></ul>
+                        <input type="hidden" name="target-id" id="target-id">
+                        <input type="hidden" name="target-type" value="teacher">
+                    </div>
+                </div>
+            {% endif %}
             <div class="form-group col-12">
-                <button type="button" class="btn btn-block btn-primary" id="selector-submit">确定
+                <label for="method">交流类型</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="cooper-method" id="method-visit" value="visit"
+                           checked>
+                    <label class="form-check-label cursor-pointer" for="method-visit">
+                        拜访
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="cooper-method" id="method-active" value="active">
+                    <label class="form-check-label cursor-pointer" for="method-active">
+                        参与活动
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="cooper-method" id="method-coop" value="coop">
+                    <label class="form-check-label cursor-pointer" for="method-coop">
+                        有效合作
+                    </label>
+                </div>
+            </div>
+            <div class="form-group col-12">
+                <label for="coop-date">交流时间</label>
+                <div class="input-group">
+                    <input type="date" name="datetime" id="coop-date" placeholder="选择交流时间" required>
+                </div>
+            </div>
+            <div class="form-group col-12">
+                <button type="submit" class="btn btn-block btn-primary">确定
                 </button>
             </div>
         </div>
@@ -32,6 +87,7 @@
 
 {% block main %}
     <div id="personal-network-chart"></div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -39,7 +95,7 @@
     <script src="{{ url_for('static', filename='js/statistics/create_graph.js') }}"></script>
 
     <script src="{{ url_for('static', filename='js/social_network/personal_network.js') }}"></script>
-
+    <script src="{{ url_for('static', filename='js/social_network/personal_network_event.js') }}"></script>
     <script>
         let csrf_token = "{{ csrf_token() }}";
         //在确保请求不属于GET HEAD OPTIONS TRACE，并且发向站内，才设置csrf_token
@@ -51,5 +107,8 @@
             }
         });
 
+        {% if get_flashed_messages() %}
+            toggle_alert(false, `{{ get_flashed_messages() }}`);
+        {% endif %}
     </script>
 {% endblock %}

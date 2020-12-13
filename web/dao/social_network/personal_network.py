@@ -43,7 +43,7 @@ def getVisitTeacherRelation(agent_id, limit=30):
 def getVisitEngineerRelation(agent_id, limit=30):
     cql = "match (agent:{agent_label})-[r:knows]-(p:{target})-[:{rel}]-(org:{org}) where agent.id='{id}' " \
           "return agent.id as s_id, agent.name as s_name, p.id as t_id, p.name as t_name, " \
-          "org.id as org_id, org.name as org_name" \
+          "org.id as org_id, org.name as org_name, " \
           "r.activity as activity, r.cooperation as coop, r.visited as visited " \
           "order by r.update_time desc limit {limit}" \
         .format(agent_label=LABEL["areaAGENT"], target=LABEL["ENGINEER"], rel=RELATION["EMPLOY"], org=LABEL["COMPANY"],
