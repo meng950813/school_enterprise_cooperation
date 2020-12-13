@@ -140,7 +140,7 @@ def formatRecommendEngineerAndTeacher(records, reverse=True):
         addLinks(links=links, source=i_id, target=t_id, category=category_index)  # 添加学院和专家的关系
         # 添加相似关系
         addLinks(links=links, source=e_id, target=t_id, click=True,
-                 label=public_service.transformSimilarLabel(record["weight"]))
+                 label=public_service.transformSimilarLabel(record["weight"], click=True))
 
     if reverse:
         nodes = [nodes_com, nodes_engineer, [], nodes_teacher, nodes_institution, nodes_uni]
