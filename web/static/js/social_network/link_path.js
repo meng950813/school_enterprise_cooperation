@@ -95,30 +95,6 @@ function showLinkPath(target, target_name) {
     $("#linkPathModalLabel").text(`联络 ${target_name} 的路径`);
     $("#linkPathModal").modal();
     getLinkPath(id, type);
-    // show_test();
-}
-
-function show_test(){
-    let nodes = [{id: "1689525",itemStyle: {color: "#e6550d"},name: "李佳",node_id: 1,node_label: "agent_university"},
-                {id: "395639", institution: "信息科学技术学院", name: "王敬", node_id: 4796285},
-                {id: "396069",institution: "电机工程与应用电子技术系",itemStyle: {color: "#31a354"},name: "何金良",node_id: 4797209,node_label: "teacher"},
-                {id: "397304",name: "电机工程与应用电子技术系",itemStyle: {color: "#756bb1"},node_id: 4801326,node_label: "org", tel: "010-62783057"}];
-    let links = [{source: "1689525", target: "396069"}, {source: "1689525",target: "397304"}, {source: "396069", target: "395639"}, {source: "397304", target: "395639"}];
-    linkPathOption.series[0].data = nodes;
-    linkPathOption.series[0].links = links;
-    linkPathOption.series[0].symbolSize = 25;
-    linkPathChart.setOption(linkPathOption);
-}
-
-function show_test2(){
-    let nodes = [{id: "1689525", itemStyle: {color: "#e6550d"}, name: "李佳", node_id: 1, node_label: "agent_university"},
-                {id: "395639", institution: "信息科学技术学院", name: "许军", node_id: 4796285},
-                {id: "396069", itemStyle: {color: "#756bb1"}, name: "电机工程与应用电子技术系", node_label: "org", tel: "010-62783057"}];
-    let links = [{source: "1689525", target: "396069"},{source: "396069", target: "395639"}];
-    linkPathOption.series[0].data = nodes;
-    linkPathOption.series[0].links = links;
-    linkPathOption.series[0].symbolSize = 25;
-    linkPathChart.setOption(linkPathOption);
 }
 
 /**

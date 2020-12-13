@@ -151,15 +151,15 @@ function nodeClickEvent(data) {
     if ("c" === type) {
         //  TODO 查看企业信息
         alert(`查看企业 ${id}`);
-    } else if ("e" === type) {
-        // TODO 查看工程师信息
-        alert(`查看工程师 ${id}`);
+    } else if ("e" === type || "t" === type) {
+        // 查看联络工程师/专家路径
+       showLinkPath(data.name, data.label);
     } else if ("u" === type) {
         // TODO 查看高校信息
         alert(`查看高校 ${id}`);
-    } else if ("t" === type) {
-        // TODO 查看专家信息
-        alert(`查看专家 ${id}`);
+    }else if ("i" === type) {
+        // TODO 查看高校学院信息
+        alert(`查看学院 ${id}`);
     }
 }
 
