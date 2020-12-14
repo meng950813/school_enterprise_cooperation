@@ -149,17 +149,18 @@ function nodeClickEvent(data) {
     let info = data.name.split("_");
     let type = info[0], id = info[1];
     if ("c" === type) {
-        //  TODO 查看企业信息
-        alert(`查看企业 ${id}`);
+        // http://39.98.94.44:6439/get_ep_detail_name/58629/江苏华电昆山热电有限公司;
+        let href = `http://39.98.94.44:6439/get_ep_detail_name/${id}/${data.label}`;
+        href_blank(href);
     } else if ("e" === type || "t" === type) {
         // 查看联络工程师/专家路径
-       showLinkPath(data.name, data.label);
+        showLinkPath(data.name, data.label);
     } else if ("u" === type) {
-        // TODO 查看高校信息
-        alert(`查看高校 ${id}`);
-    }else if ("i" === type) {
-        // TODO 查看高校学院信息
-        alert(`查看学院 ${id}`);
+        let href = `http://39.98.94.44:6438/school/profile/index/${data.label}`;
+        href_blank(href);
+    } else if ("i" === type) {
+        let href = ` http://39.98.94.44:6438/school/profile/institution_profile/${data.uni}/${data.label}`;
+        href_blank(href);
     }
 }
 
@@ -169,9 +170,14 @@ function nodeClickEvent(data) {
  */
 function edgeClickEvent(data) {
     if (data.click && data.source && data.target) {
-        let redirect = document.createElement("a");
-        redirect.href = `/detail?s=${data.source}&t=${data.target}`;
-        redirect.target = "_blank";
-        redirect.click();
+        let href = `/detail?s=${data.source}&t=${data.target}`;
+        href_blank(href);
     }
+}
+
+function href_blank(href) {
+    let redirect = document.createElement("a");
+    redirect.href = href;
+    redirect.target = "_blank";
+    redirect.click();
 }

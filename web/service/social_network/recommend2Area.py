@@ -133,7 +133,8 @@ def formatRecommendEngineerAndTeacher(records, reverse=True):
 
         category_index = addCategory(category_list, category_map, node_id=record["u_id"], name=record["u_name"])
         addNode(node_set, nodes_uni, node_id=u_id, category=category_index, label=record["u_name"])  # 添加学校节点
-        addNode(node_set, nodes_institution, node_id=i_id, category=category_index, label=record["i_name"])  # 添加学院节点
+        addNode(node_set, nodes_institution, node_id=i_id, category=category_index, label=record["i_name"],
+                uni=record["u_name"])  # 添加学院节点
         addNode(node_set, nodes_teacher, node_id=t_id, category=category_index, label=record["t_name"])  # 添加专家节点
 
         addLinks(links=links, source=u_id, target=i_id, category=category_index)  # 添加学校和学院的关系
@@ -191,7 +192,8 @@ def formatRecommendInstitutionAndCompany(records, reverse=True):
         # 以学校名 作为 category
         category_index = addCategory(category_list, category_map, node_id=record["u_id"], name=record["u_name"])
         addNode(node_set, nodes_uni, node_id=uni_id, category=category_index, label=record["u_name"])  # 添加高校节点
-        addNode(node_set, nodes_institution, node_id=i_id, category=category_index, label=record["i_name"])  # 添加学院节点
+        addNode(node_set, nodes_institution, node_id=i_id, category=category_index, label=record["i_name"],
+                uni=record["u_name"])  # 添加学院节点
         addLinks(links=links, source=uni_id, target=i_id, category=category_index)  # 添加学校和学院的关系
 
         addLinks(links=links, source=com_id, target=i_id,
