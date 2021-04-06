@@ -3,6 +3,7 @@
 """
 from web.settings import LABEL
 from web.utils.neo4j_operator import neo4j as neo4j
+from web.utils.mysql_operator import mysql as mysql
 
 
 def getTeacherTeamBasicInfo(t_id):
@@ -24,7 +25,7 @@ def getEngineerTeamBasicInfo(e_id):
     :return: [{name, members, org}]
     """
     cql = "match (org:{com})-[:employ]-(e:{engineer}) where e.id={id} " \
-          "return org.name as org, e.member as members, e.name as name" \
+          "return org.name as org, e.member as members, e.name as name, e.team_patent as team_patent" \
         .format(com=LABEL["COMPANY"], engineer=LABEL["ENGINEER"], id=e_id)
     return neo4j.run(cql)
 
@@ -45,7 +46,7 @@ def getSimilarPatents(team_teacher, team_engineer, teacher=True, skip=0, limit=1
 
 def getTeamField(eid, tid):
     """
-    获取 工程师团队 与 专家团队 的行业交集
+    统计 工程师团队 与 专家团队 中所有节点的industry属性，作为行业交集
     :return: [{}]
     """
     cql = "match (e:Engineer{team:%d}) with distinct(e.industry) as industry_e, count(e.industry) as count_e " \
@@ -55,13 +56,16 @@ def getTeamField(eid, tid):
     return neo4j.run(cql)
 
 
-def getTeamPatentsNumber(_id, teacher=True):
+def getTeamPatentsNumber(team_id, teacher=True):
     """
-    TODO 根据 team_id 获取团队的专利数量， 待删除
+    统计团队中的全部成员的专利数量，将结果写入 团队核心节点中的 team_patent 属性中
+    :param team_id:
+    :param teacher:
+    :return:[{"team_patent": 123}]
     """
     label = LABEL["TEACHER"] if teacher is True else LABEL["ENGINEER"]
     cql = "Match (l:{label})-[:write]-(p:Patent) where l.team={id} " \
-          "return count(distinct(p.application_number)) as nums".format(label=label, id=_id)
+          "return count(distinct(p)) as nums".format(label=label, id=team_id)
     return neo4j.run(cql)
 
 
@@ -81,11 +85,12 @@ def getTechnicalFieldComparison(eid=None, tid=None, team=True):
 def getTeamTechnicalFieldDistribute(team_id, teacher=True):
     """
     获取企业工程师 / 高校专家的 团队专利技术分布 ==> 各个ipc下的专利数量分布
+    :return: [{ipc:xxx, patent:xxx}, ...], 结果中包含重复数据，需要去重
     """
     label = LABEL["TEACHER"] if teacher is True else LABEL["ENGINEER"]
-    cql = f"Match (n:{label})-[:write]-(p:Patent)-[r:include]-(ipc:IPC) " \
+    cql = f"Match (n:{label})-[:write]-(p:Patent)-[:include]-(ipc:IPC) " \
           f"where n.team={team_id} " \
-          f"return ipc.code as ipc, count(r) as count"
+          f"return ipc.code as ipc, id(p) as patent"
     return neo4j.run(cql)
 
 
@@ -98,3 +103,24 @@ def getTeamMembers(team_id, teacher=True):
           "and t1.id <> t2.id return t1.id as id1, t1.name as name1, t1.patent as patent1, r.frequency as count, " \
           "t2.id as id2, t2.name as name2, t2.patent as patent2".format(label=label, team_id=team_id)
     return neo4j.run(cql)
+
+
+def getIndustryIPC(ipc):
+    """
+    获取 ipc 与 国民经济行业的对应关系
+    :param ipc: set, {"A123/01", ..} or {}
+    :return: [] or [{code: xxxx, title: xxx, ipc: xx}, ...]
+    """
+    if 0 == len(ipc):
+        return []
+    sql = "SELECT info.`code` as code, info.title as title, ipc_code as ipc " \
+          "FROM industry_ipc as ipc " \
+          "JOIN industry as info " \
+          "ON info.`code` = ipc.industry_code and depth=2 " \
+          "WHERE ipc.ipc_code IN {ipc}".format(ipc=tuple(ipc))
+    # ==> [] or [{code: xxxx, title: xxx, ipc: xx}, ...]
+    return mysql.fetch_data(sql)
+
+
+if __name__ == '__main__':
+    print(getIndustryIPC({"B05D1/28", "B05D1/18"}))

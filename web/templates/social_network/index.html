@@ -40,32 +40,32 @@
     <div class="container">
         <div class="header">
             <div class="header-body border-0">
-                  <form class="search-container" id="search-form">
-                            <div class="input-group input-group-lg input-group-merge">
-                                <div class="form-control form-control-prepended form-control-appended p-0">
-                                    <select name="uni" id="search-select" multiple="multiple" required>
-                                        {% for university in universities %}
-                                            <option value="{{ university['id'] }}">{{ university['name'] }}</option>
-                                        {% endfor %}
+                <form class="search-container" id="search-form">
+                    <div class="input-group input-group-lg input-group-merge">
+                        <div class="form-control form-control-prepended form-control-appended p-0">
+                            <select name="uni" id="search-select" multiple="multiple" required>
+                                {% for university in universities %}
+                                    <option value="{{ university['id'] }}">{{ university['name'] }}</option>
+                                {% endfor %}
 
-                                    </select>
-                                </div>
+                            </select>
+                        </div>
 
-                                <div class="input-group-prepend">
-                                    <select class="input-group-text border-right-2">
-                                        <option value="">昆山开发区</option>
-                                    </select>
-                                </div>
-                                <div class="input-group-append">
-                                    <div id="search-btn"
-                                         class="input-group-text bg-primary border-left-2 cursor-pointer">
+                        <div class="input-group-prepend">
+                            <select class="input-group-text border-right-2">
+                                <option value="">昆山开发区</option>
+                            </select>
+                        </div>
+                        <div class="input-group-append">
+                            <div id="search-btn"
+                                 class="input-group-text bg-primary border-left-2 cursor-pointer">
                                     <span class="text-white px-2">
                                         <i class="fe fe-search"></i>
                                     </span>
-                                    </div>
-                                </div>
                             </div>
-                        </form>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
 

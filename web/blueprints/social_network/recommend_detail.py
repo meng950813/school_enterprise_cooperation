@@ -50,6 +50,18 @@ def technicalFieldComparison():
     return detail_service.technicalFieldComparison(eid=eid, tid=tid, team=team)
 
 
+@recommend_detail_bp.route("/field")
+@oidc.require_login
+def technicalFieldComparisonForRadar():
+    """
+    获取技术领域分布雷达图所需数据
+    :return:
+    """
+    eid = request.args.get("eid", default=None, type=int)
+    tid = request.args.get("tid", default=None, type=int)
+    return detail_service.technicalFieldComparisonForRadar(eid=eid, tid=tid)
+
+
 @recommend_detail_bp.route("/teamMembers")
 @oidc.require_login
 def getTeamMembers():

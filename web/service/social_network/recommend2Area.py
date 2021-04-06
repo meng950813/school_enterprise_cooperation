@@ -35,8 +35,9 @@ def recommendResult(town_id=None, com_id="", uni_id="", limit=20):
     else:  # 输入企业
         comps = [int(c_id) for c_id in com_id.split(",")]
         if not isinstance(uni_id, str) or 0 == len(uni_id):  # 未传入高校参数 或 参数格式不正确
-            # ==> 推荐与特定企业相匹配的高校学院
-            return recommendInstitutionForCompany(com_id=comps, limit=limit)
+            # ==> 推荐与特定企业相匹配的高校专家团队
+            # return recommendInstitutionForCompany(com_id=comps, limit=limit)
+            return recommendEngineerAndTeacherTeam2(com_id=comps, limit=limit)
         else:
             # ==> 推荐企业工程师和高校专家
             uni_id_list = [int(u_id) for u_id in uni_id.split(",")]
@@ -104,6 +105,19 @@ def recommendEngineerAndTeacherTeam(com_id, uni_id, reverse=True, limit=20):
     :return:
     """
     records = recommend2Area_dao.recommendEngineerAndTeacherTeam(company_id=com_id, uni_id=uni_id, limit=limit)
+    return public_service.returnResult(success=True,
+                                       data=formatRecommendEngineerAndTeacher(records=records, reverse=reverse))
+
+
+def recommendEngineerAndTeacherTeam2(com_id, reverse=True, limit=20):
+    """
+    制定 高校 & 企业 推荐 专家团队 & 工程师团队
+    :param com_id: list, [] or [123,435...]
+    :param reverse: True or False, 地区排列 与 高校排列 的顺序
+    :param limit: 一次获取的数据量
+    :return:
+    """
+    records = recommend2Area_dao.recommendEngineerAndTeacherTeam2(com_id=com_id, limit=limit)
     return public_service.returnResult(success=True,
                                        data=formatRecommendEngineerAndTeacher(records=records, reverse=reverse))
 

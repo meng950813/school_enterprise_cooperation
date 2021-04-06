@@ -7,74 +7,84 @@
 {% endblock %}
 
 {% block sidebar %}
-    <form role="form" id="selector-form">
-        <div class="row">
+    <nav class="navbar navbar-vertical navbar-light fixed-left navbar-expand-md">
+        <div class="container-fluid">
+        <!-- Toggler -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarCollapse"
+                aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+            <form role="form" id="selector-form">
+                <div class="row">
 
-            <div class="form-group col-12">
-                <label for="town">区镇</label>
-                <select name="town" id="town" class="form-control">
-                    {% for town in towns %}
-                        <option value="{{ town['id'] }}">{{ town["name"] }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+                    <div class="form-group col-12">
+                        <label for="town">区镇</label>
+                        <select name="town" id="town" class="form-control">
+                            {% for town in towns %}
+                                <option value="{{ town['id'] }}">{{ town["name"] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-            {#                <div class="form-group col-12">#}
-            {#                    <label for="industry">行业</label>#}
-            {#                    <select name="industry" id="industry" class="form-control" >#}
-            {#                        <option value="0">全选</option>#}
-            {#                        <option value="1">冶金</option>#}
-            {#                        <option value="2">电器</option>#}
-            {#                        <option value="3">机械制造</option>#}
-            {#                    </select>#}
-            {#                </div>#}
+                    {#                <div class="form-group col-12">#}
+                    {#                    <label for="industry">行业</label>#}
+                    {#                    <select name="industry" id="industry" class="form-control" >#}
+                    {#                        <option value="0">全选</option>#}
+                    {#                        <option value="1">冶金</option>#}
+                    {#                        <option value="2">电器</option>#}
+                    {#                        <option value="3">机械制造</option>#}
+                    {#                    </select>#}
+                    {#                </div>#}
 
-            <div class="form-group col-12">
-                <label for="company_name">选择企业</label>
-                <div class="input-group">
-                    <input type="text" class="form-control fuzzy-matching" data-org-type="c" id="company_name"
-                           name="company_name" placeholder="请输入企业名称">
-                    {#                        <div class="input-group-append">#}
-                    {#                            <strong class="input-group-text create-tag">+</strong>#}
-                    {#                        </div>#}
-                    <ul class="list-group show-items"></ul>
-                </div>
-                <div class="col-12 tag-list company-tags">
-                    {#                        <label class="btn btn-dark">#}
-                    {#                            <span class="tag" data-id="123">${value}</span>#}
-                    {#                            <i class="mdui-icon material-icons remove-tag" style="cursor: pointer">&#xe14c;</i>#}
-                    {#                        </label>#}
-                </div>
-            </div>
-            <div class="form-group col-12">
-                <label for="university_name">选择高校</label>
-                <div class="input-group">
-                    <input type="text" class="form-control fuzzy-matching" data-org-type="u"
-                           id="university_name" name="university_name" placeholder="请输入高校名称">
-                    <ul class="list-group show-items">
-                        {#                            <li class="list-group-item">Cras justo odio</li>#}
-                    </ul>
-                </div>
-                <div class="col-12 tag-list university-tags">
-                    {% for org in orgs %}
-                        <span class='btn btn-dark tag-container'>
+                    <div class="form-group col-12">
+                        <label for="company_name">选择企业</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control fuzzy-matching" data-org-type="c" id="company_name"
+                                   name="company_name" placeholder="请输入企业名称">
+                            {#                        <div class="input-group-append">#}
+                            {#                            <strong class="input-group-text create-tag">+</strong>#}
+                            {#                        </div>#}
+                            <ul class="list-group show-items"></ul>
+                        </div>
+                        <div class="col-12 tag-list company-tags">
+                            {#                        <label class="btn btn-dark">#}
+                            {#                            <span class="tag" data-id="123">${value}</span>#}
+                            {#                            <i class="mdui-icon material-icons remove-tag" style="cursor: pointer">&#xe14c;</i>#}
+                            {#                        </label>#}
+                        </div>
+                    </div>
+                    <div class="form-group col-12">
+                        <label for="university_name">选择高校</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control fuzzy-matching" data-org-type="u"
+                                   id="university_name" name="university_name" placeholder="请输入高校名称">
+                            <ul class="list-group show-items">
+                                {#                            <li class="list-group-item">Cras justo odio</li>#}
+                            </ul>
+                        </div>
+                        <div class="col-12 tag-list university-tags">
+                            {% for org in orgs %}
+                                <span class='btn btn-dark tag-container'>
                             <span class="tag" data-id={{ org["id"] }}>{{ org["name"] }}</span>
                             <span class="remove-tag cursor-pointer"><i class="fe fe-x"></i></span>
                         </span>
-                    {% endfor %}
-                </div>
-            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
 
-            <div class="form-group col-12">
-                <label for="search-number">数量</label>
-                <input class="form-control" type="number" id="search-number" name="search-number" value=15 min=1>
-            </div>
-            <div class="form-group col-12">
-                <button type="button" class="btn btn-block btn-primary preservation" id="selector-submit">确定
-                </button>
-            </div>
+                    <div class="form-group col-12">
+                        <label for="search-number">数量</label>
+                        <input class="form-control" type="number" id="search-number" name="search-number" value=15
+                               min=1>
+                    </div>
+                    <div class="form-group col-12">
+                        <button type="button" class="btn btn-block btn-primary preservation" id="selector-submit">确定
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
-    </form>
+    </nav>
 {% endblock %}
 
 {% block main %}

@@ -67,6 +67,11 @@ function getLinkPath(target, type) {
         // TODO
         data: {"target": target, "t_type": type},
         success: function (res) {
+            debugger
+            if (!res.success){
+                toggle_alert(false, res.message);
+                return
+            }
             linkPathOption.series[0].data = res.data.nodes;
             linkPathOption.series[0].links = res.data.links;
             linkPathOption.series[0].symbolSize = 25;

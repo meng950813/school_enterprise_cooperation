@@ -22,9 +22,9 @@ def recommendEngineerAndTeacher(com_id, uni_id, teacher_id, limit=20):
     """
     cql = "match (c:Company)-[:employ]-(e:Engineer)-[r:{relation}]-(t:Teacher)-[:include]-" \
           "(i:Institution)-[:include]-(u:University) " \
-          "where c.id in {company_id} and u.id in {uni_id} and t.id in {teacher_id}" \
+          "where c.id in {company_id} and u.id in {uni_id} and t.id in {teacher_id} " \
           "return c.id as c_id, c.name as c_name, e.id as e_id, e.name as e_name, t.id as t_id, t.name as t_name, " \
           "i.id as i_id, i.name as i_name, u.id as u_id, u.name as u_name, r.weight as weight " \
-          "order by weight asc limit {limit}".format(relation=RELATION["PSM"], company_id=com_id, uni_id=uni_id,
-                                                     teacher_id=teacher_id, limit=limit)
+          "order by weight desc limit {limit}".format(relation=RELATION["PSM"], company_id=com_id, uni_id=uni_id,
+                                                      teacher_id=teacher_id, limit=limit)
     return neo4j.run(cql)

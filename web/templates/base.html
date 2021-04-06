@@ -13,44 +13,43 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/social_network/public.css') }}">
 
         {% block styles %}{% endblock %}
+        <style>
+        .navbar-vertical.navbar-expand-md{
+            top: 67px!important;
+        }
+        .navbar-brand-img, .navbar-brand>img{
+            max-height: 2.5rem!important;
+        }
+        </style>
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 
     {% endblock %}
 </head>
 <body>
-<nav class="navbar navbar-vertical navbar-light fixed-left navbar-expand-md">
-    <div class="container-fluid">
-        <!-- Toggler -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarCollapse"
-                aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+{#<nav class="navbar navbar-vertical navbar-light fixed-left navbar-expand-md">#}
+{#    <div class="container-fluid">#}
+        {% block sidebar %}{% endblock %}
+{#    </div>#}
+{#</nav>#}
+
+<nav class="navbar navbar-expand-lg navbar-light" id="topnav">
+    <div class="container">
 
         <!-- Brand -->
-        <a class="dd-md-none" href="./index">
-            <img src="{{ url_for('static', filename='image/logo_low.jpg') }}" class="img-fluid" alt="...">
-        </a>
-        <a href="./index" class="d-md-none avatar">
-            <img src="{{ url_for('static', filename='image/logo_low.jpg') }}" class="img-fluid" alt="...">
+        <a class="navbar-brand mr-auto" href="/index">
+            <img src="{{ url_for('static', filename='image/logo_low.jpg') }}" alt="..." class="navbar-brand-img">
         </a>
 
-        {% block sidebar %}{% endblock %}
-
-
-        <!-- User (md) -->
-        <div class="navbar-user d-none d-md-flex" id="sidebarUser">
-            <!-- Dropup -->
-            <div class="dropup">
+        <!-- User -->
+        <div class="navbar-user">
+            <!-- Dropdown -->
+            <div class="dropdown">
                 <!-- Toggle -->
-                <a href="{{ url_for('index.personalNetwork') }}" id="sidebarIconCopy" class="dropdown-toggle"
-                   role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    <div class="avatar avatar-sm avatar-online">
-                        {#                        <img src="{{ url_for("user.avatar", filename=current_user['avatar']) }}" class="avatar-img rounded-circle" alt="...">#}
-                        <img src="{{ url_for("static", filename="image/logo.png") }}" class="avatar-img rounded-circle"
-                             alt="...">
-                    </div>
+                <a href="#" class="avatar avatar-sm avatar-online dropdown-toggle" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <img src="{{ url_for("static", filename="image/logo.png") }}" alt="..." class="avatar-img rounded-circle">
                 </a>
+
                 <!-- Menu -->
                 <div class="dropdown-menu" aria-labelledby="sidebarIconCopy">
                     <a href="{{ url_for('index.personalNetwork') }}" class="dropdown-item">
@@ -60,8 +59,41 @@
                 </div>
             </div>
         </div>
-    </div>
+
+        <!-- Collapse -->
+        <div class="collapse navbar-collapse mr-lg-auto order-lg-first" id="navbar">
+
+            <!-- Navigation -->
+            <ul class="navbar-nav mr-lg-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/index" role="button" aria-haspopup="true"
+                        aria-expanded="false">
+                        首页
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cooperate" target="_blank">
+                        合作管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="/visit" target="_blank">
+                        拜访管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('index.personalNetwork') }}" target="_blank">
+                        个人中心
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+    </div> <!-- / .container -->
 </nav>
+
+
 <div class="main-content">
     <main>
         {% block main %}{% endblock %}
@@ -107,8 +139,8 @@
 
     $("#btn-logout").on("click", function (){
        let redirect = document.createElement("a");
-        redirect.href = `http://39.98.94.44:8085/auth/realms/kunshan/protocol/openid-connect/logout?redirect_uri=http://39.98.94.44:6446/logout`;
-        debugger
+        {#redirect.href = `http://39.98.94.44:8085/auth/realms/kunshan/protocol/openid-connect/logout?redirect_uri=http://39.98.94.44:6446/logout`;#}
+        redirect.href = `http://39.98.94.44:8085/auth/realms/kunshan/protocol/openid-connect/logout?redirect_uri=http://127.0.0.1:5000/logout`;
         redirect.click();
     });
 </script>

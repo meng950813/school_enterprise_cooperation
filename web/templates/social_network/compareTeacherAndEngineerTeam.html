@@ -55,8 +55,8 @@
                             </tr>
                             <tr>
                                 <th>团队专利</th>
-                                <td>{{ basic_info.engineer.patents | length }}项</td>
-                                <td>{{ basic_info.teacher.patents | length }}项</td>
+                                <td>{{ basic_info.engineer.team_patent }}项</td>
+                                <td>{{ basic_info.teacher.team_patent }}项</td>
                             </tr>
                             <tr>
                                 <th>主要行业</th>
@@ -72,15 +72,15 @@
             <div class="col-8">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-header-title">相关专利</h4>
+                        <h4 class="card-header-title">专利分布</h4>
                     </div>
                     <div class="card-body chart p-0">
                         <div id="chart-technical-field-comparison"></div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
+{#        </div>#}
+{#        <div class="row">#}
             <div class="col-4">
                 <div class="card">
                     <div class="card-header">
@@ -105,45 +105,79 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-4">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-header-title">
-                            {#                            {{ basic_info.engineer.name }} 团队专利#}
-                            企业团队专利
-                        </h2>
+                        <h2 class="card-header-title">行业分布</h2>
                     </div>
                     <div class="card-body p-0 height-500px">
-                        <ul class="list-group">
-                            {% for patent in basic_info.engineer.patents %}
-                                <li class="list-group-item d-flex justify-content-between">
-                                    {{ patent.name }}
-                                    <span class="nowrap ml-1">{{ patent.date | timestamp2date }}</span>
-                                </li>
-                            {% endfor %}
-                        </ul>
+                        <div id="chart-radar"></div>
                     </div>
                 </div>
             </div>
+
             <div class="col-4">
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-header-title">
-                            {#                            {{ basic_info.teacher.name }} 团队专利#}
-                            专家团队专利
+                            专利对比
                         </h2>
+                        <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+                            <li class="nav-item">
+                                <a href="#patents-company" class="nav-link active" data-toggle="tab">
+                                    企业专利
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#patents-teacher" class="nav-link" data-toggle="tab">
+                                    专家专利
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="card-body p-0 height-500px">
-                        <ul class="list-group">
-                            {% for patent in basic_info.teacher.patents %}
+                    <div class="card-body p-0 height-500px tab-content">
+                        <div class="tab-pane active" id="patents-company">
+                            <ul class="list-group">
+                                {% for patent in basic_info.engineer.patents_list %}
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        {{ patent.name }}
+                                        <span class="nowrap ml-1">{{ patent.date | timestamp2date }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="tab-pane" id="patents-teacher">
+                            <ul class="list-group">
+                            {% for patent in basic_info.teacher.patents_list %}
                                 <li class="list-group-item d-flex justify-content-between">{{ patent.name }}
                                     <span class="nowrap ml-1">{{ patent.date | timestamp2date }}</span>
                                 </li>
                             {% endfor %}
                         </ul>
+                        </div>
                     </div>
                 </div>
             </div>
+{#            <div class="col-4">#}
+{#                <div class="card">#}
+{#                    <div class="card-header">#}
+{#                        <h2 class="card-header-title">#}
+                            {#                            {{ basic_info.teacher.name }} 团队专利#}
+{#                            专家团队专利#}
+{#                        </h2>#}
+{#                    </div>#}
+{#                    <div class="card-body p-0 height-500px">#}
+{#                        <ul class="list-group">#}
+{#                            {% for patent in basic_info.teacher.patents_list %}#}
+{#                                <li class="list-group-item d-flex justify-content-between">{{ patent.name }}#}
+{#                                    <span class="nowrap ml-1">{{ patent.date | timestamp2date }}</span>#}
+{#                                </li>#}
+{#                            {% endfor %}#}
+{#                        </ul>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
         </div>
     </div>
 

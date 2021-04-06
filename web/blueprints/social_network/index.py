@@ -6,6 +6,7 @@ from web.service.social_network import recommend2Area as recommend2Area_service
 from web.service.social_network import api as api_service
 from web.extensions import oidc
 from web.utils import auth
+import json
 
 index_bp = Blueprint('index', __name__)
 
@@ -60,13 +61,18 @@ def recommendResult():
     uni_id = request.args.get("uni", default="", type=str)
     teacher_id = request.args.get("teacher", default="", type=str)
     limit = request.args.get("limit", default=15, type=int)
-    if auth.require_role("KETD", "技转中心"):
+    if not auth.require_role("KETD", "技转中心"):
         # 高校技转中心用户
         return recommend2University_service.recommendResult(town_id=town_id, com_id=com_id, uni_id=uni_id,
                                                             teacher_id=teacher_id, limit=limit)
     else:
         # 地区中介用户
         return recommend2Area_service.recommendResult(town_id=town_id, com_id=com_id, uni_id=uni_id, limit=limit)
+
+
+@index_bp.route("/recommend-table")
+def recommendTable():
+    return render_template("social_network/recommend.html")
 
 
 @index_bp.route("/personal-network")
@@ -115,3 +121,58 @@ def addContactInformation():
     else:
         flash(message=result["message"], category="error")
     return redirect(url_for("index.personalNetwork"))
+
+
+@index_bp.route("/cooperate", methods=["get"])
+def cooperate():
+    return render_template("social_network/cooperate.html")
+
+
+@index_bp.route("/cooperate_record", methods=["get"])
+def cooperate_record():
+    records = [
+
+    ]
+
+    res = {"success": True, "data": records, "total": 1}
+
+    return json.dumps(res)
+
+
+@index_bp.route("/visit", methods=["get"])
+def visit():
+    return render_template("social_network/visit.html")
+
+
+@index_bp.route("/visit_record", methods=["get"])
+def visit_record():
+    records = [
+        {
+            "teacher": "史清宇",
+            "institution": "机械工程系",
+            "university": "清华大学",
+            "date": "2020年11月11日"
+        },
+        {
+            "teacher": "汪泽",
+            "institution": "机械学院",
+            "university": "清华大学",
+            "date": "2020年11月4日"
+        },
+        {
+            "teacher": "胡楚雄",
+            "institution": "机械工程系",
+            "university": "清华大学",
+            "date": "2020年10月23日"
+        },
+        {
+            "teacher": "蔡志鹏",
+            "institution": "机械工程系",
+            "university": "清华大学",
+            "date": "2020年8月19日"
+        }
+    ]
+
+    res = {"success": True, "data": records, "total": 1}
+
+    return json.dumps(res)
