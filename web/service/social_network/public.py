@@ -151,7 +151,8 @@ def transformSimilarLabel(value, click=False):
     :param click: True or False
     :return: 技术相似度： 98.90%
     """
-    precent = round((1 - value) * 100, 2)
+    # precent = round((1 - value) * 100, 2)
+    precent = round(value * 100, 2)
     if click:
         return "技术相似度： {p}% <br>点击查看详细对比".format(p=precent)
     else:

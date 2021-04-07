@@ -1,8 +1,7 @@
 let technicalFieldComparisonChart = getEChartsObject("chart-technical-field-comparison");
 let teamGraphChart = getEChartsObject("chart-team-graph");
-let radarChart = getEChartsObject("chart-radar");
-technicalFieldComparisonChart.showLoading();
-radarChart.showLoading();
+
+// technicalFieldComparisonChart.showLoading();
 
 let TeacherTeamOption = undefined, EngineerTeamOption = undefined;
 
@@ -14,7 +13,7 @@ let graphOption = {
     series: [
         {
             type: 'graph',
-            layout: 'force',
+            layout: 'circular',
             data: [],
             links: [],
             roam: true,
@@ -107,85 +106,7 @@ function getTechnicalFieldComparison() {
     });
 }
 
-// 雷达图配置
-let RadarOption = {
-    tooltip: {},
-    legend: {
-        // data: ['预算分配（Allocated Budget）', '实际开销（Actual Spending）']
-    },
-    radar: {
-        // shape: 'circle',
-        name: {
-            textStyle: {
-                color: '#fff',
-                backgroundColor: '#999',
-                borderRadius: 3,
-                padding: [3, 5]
-            }
-        },
-        indicator: [
-            // {name: '销售（sales）', max: 6500},
-            // {name: '管理（Administration）', max: 16000},
-            // {name: '信息技术（Information Techology）', max: 30000},
-            // {name: '客服（Customer Support）', max: 38000},
-            // {name: '研发（Development）', max: 52000},
-            // {name: '市场（Marketing）', max: 25000}
-        ]
-    },
-    series: [{
-        name: '',
-        type: 'radar',
-        // areaStyle: {normal: {}},
-        data: [
-            {
-                value: [4300, 10000, 28000, 35000, 50000, 19000],
-                name: '预算分配（Allocated Budget）'
-            },
-            {
-                value: [5000, 14000, 28000, 31000, 42000, 21000],
-                name: '实际开销（Actual Spending）'
-            }
-        ]
-    }]
-};
 
-function getFieldComparisonForRadar() {
-    $.ajax({
-        type: "get",
-        url: "/detail/field",
-        data: {"eid": ENGINEER_ID, "tid": TEACHER_ID, "team": TEAM},
-        success: function (res) {
-            if (res.success === false) {
-                toggle_alert(false, res.message);
-                return false;
-            }
-            let option = RadarOption;
-            option.legend = {data: [ENGINEER_TEAM, TEACHER_TEAM]}
-            option.radar.indicator = res.data.indicator;
-            option.series = [{
-                type: 'radar',
-                // areaStyle: {normal: {}},
-                data: [
-                    {
-                        value: res.data.e_value,
-                        name: ENGINEER_TEAM
-                    },
-                    {
-                        value: res.data.t_value,
-                        name: TEACHER_TEAM
-                    }
-                ]
-            }];
-            console.log(option);
-            radarChart.setOption(option);
-            radarChart.hideLoading();
-        },
-        error: function (error) {
-            console.error(error);
-        }
-    });
-
-}
 
 function showTeamMembers(type = 0) {
     let option = type === 0 ? EngineerTeamOption : TeacherTeamOption;
@@ -196,7 +117,6 @@ function showTeamMembers(type = 0) {
     } else {
         getTeamMembers();
     }
-
 }
 
 function getTeamMembers(type = 0) {
@@ -224,8 +144,8 @@ function getTeamMembers(type = 0) {
 }
 
 
-getTechnicalFieldComparison();
-getFieldComparisonForRadar()
+// getTechnicalFieldComparison();
+
 getTeamMembers(0);
 
 registerNodeClickEvent(teamGraphChart);

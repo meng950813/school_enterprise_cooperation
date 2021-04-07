@@ -27,6 +27,22 @@ def recommendUniversityAndCompany(town_id, limit=20):
     return neo4j.run(cql)
 
 
+def recommendUniversityForCompany(company_id, limit=20):
+    """
+    根据企业id， 为特定企业推荐 高校
+    :param company_id: list [123, ..]
+    :param limit:
+    :return: [{town_id, town_name, c_id, c_name, i_id, i_name, u_id, u_name, weight)}]
+    """
+    cql = "match (town:Town)-[:locate]-(c:Company)-[r:{relation}]-(u:University) " \
+          "where c.id in {company_id} " \
+          "return town.id as town_id,town.name as town_name, c.id as c_id, c.name as c_name, " \
+          "u.id as u_id, u.name as u_name, r.weight as weight " \
+          "order by weight desc limit {limit}".format(relation=RELATION["CUSM"], company_id=company_id, limit=limit)
+
+    return neo4j.run(cql)
+
+
 def recommendInstitutionAndCompany(town_id, uni_id, limit=20):
     """
     根据选定区域的id、 以及选定高校的id, 推荐地区企业 和 高校学院

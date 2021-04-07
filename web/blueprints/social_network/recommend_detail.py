@@ -68,3 +68,15 @@ def getTeamMembers():
     eid = request.args.get("eid", default=None, type=int)
     tid = request.args.get("tid", default=None, type=int)
     return detail_service.getTeamMembers(team_t=tid, team_e=eid)
+
+
+@recommend_detail_bp.route("/river")
+@oidc.require_login
+def technicalFieldComparisonForRiver():
+    """
+    获取河流图所需数据
+    :return:
+    """
+    teamId = request.args.get("teamId", default=None, type=int)
+    team_type = request.args.get("type", default=1, type=int)
+    return detail_service.chartsRiver(teamId=teamId, teacher=True if 1 == team_type else False)

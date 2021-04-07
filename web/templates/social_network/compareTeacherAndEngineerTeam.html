@@ -69,13 +69,37 @@
                 </div>
             </div>
 
+{#            <div class="col-8">#}
+{#                <div class="card">#}
+{#                    <div class="card-header">#}
+{#                        <h2 class="card-header-title">专利分布</h2>#}
+{#                    </div>#}
+{#                    <div class="card-body chart p-0">#}
+{#                        <div id="chart-technical-field-comparison"></div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
             <div class="col-8">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-header-title">专利分布</h4>
+                        <h2 class="card-header-title">技术领域演变</h2>
+                        <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
+                            <li class="nav-item cursor-pointer" onclick="showRiver(0);">
+                            <span class="nav-link active" data-toggle="tab">
+{#                              {{ basic_info.engineer.name }} 团队#}
+                              企业团队
+                            </span>
+                            </li>
+                            <li class="nav-item cursor-pointer" onclick="showRiver(1);">
+                            <span class="nav-link" data-toggle="tab">
+{#                              {{ basic_info.teacher.name }} 团队#}
+                              专家团队
+                            </span>
+                            </li>
+                        </ul>
                     </div>
                     <div class="card-body chart p-0">
-                        <div id="chart-technical-field-comparison"></div>
+                        <div id="chart-river"></div>
                     </div>
                 </div>
             </div>
@@ -224,4 +248,6 @@
 
     <script src="{{ url_for('static', filename='js/social_network/link_path.js') }}"></script>
     <script src="{{ url_for('static', filename='js/social_network/recommend_detail.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/social_network/radar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/social_network/themeRiver.js') }}"></script>
 {% endblock %}
