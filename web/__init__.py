@@ -6,7 +6,7 @@ from flask import Flask, render_template, current_app, url_for, request
 from logging.handlers import RotatingFileHandler
 
 from web.extensions import bootstrap, csrf
-# from web.extensions import oidc
+from web.extensions import oidc
 
 from web.settings import configuration
 
@@ -40,7 +40,7 @@ def create_app(config_name=None):
     register_template_filter(app)
 
     # 注册 keycloak
-    # oidc.init_app(app)
+    oidc.init_app(app)
 
     return app
 

@@ -1,14 +1,14 @@
 from flask import Blueprint, render_template, request, abort
 from web.service.social_network import public as public_service
 from web.service.social_network import recommend_detail as detail_service
-# from web.extensions import oidc
+from web.extensions import oidc
 
 recommend_detail_bp = Blueprint('recommend_detail', __name__)
 
 
 @recommend_detail_bp.route("/", methods=["GET"])
 @recommend_detail_bp.route("/index", methods=["GET"])
-# @oidc.require_login
+@oidc.require_login
 def index():
     source = request.args.get("s", default="", type=str)
     target = request.args.get("t", default="", type=str)
@@ -42,7 +42,7 @@ def compareTeacherAndEngineerTeam(source, target):
 
 
 @recommend_detail_bp.route("/technicalFieldComparison")
-# @oidc.require_login
+@oidc.require_login
 def technicalFieldComparison():
     eid = request.args.get("eid", default=None, type=int)
     tid = request.args.get("tid", default=None, type=int)
@@ -51,7 +51,7 @@ def technicalFieldComparison():
 
 
 @recommend_detail_bp.route("/field")
-# @oidc.require_login
+@oidc.require_login
 def technicalFieldComparisonForRadar():
     """
     获取技术领域分布雷达图所需数据
@@ -63,7 +63,7 @@ def technicalFieldComparisonForRadar():
 
 
 @recommend_detail_bp.route("/teamMembers")
-# @oidc.require_login
+@oidc.require_login
 def getTeamMembers():
     eid = request.args.get("eid", default=None, type=int)
     tid = request.args.get("tid", default=None, type=int)
@@ -71,7 +71,7 @@ def getTeamMembers():
 
 
 @recommend_detail_bp.route("/river")
-# @oidc.require_login
+@oidc.require_login
 def technicalFieldComparisonForRiver():
     """
     获取河流图所需数据
@@ -83,7 +83,7 @@ def technicalFieldComparisonForRiver():
 
 
 @recommend_detail_bp.route("/wordCloud")
-# @oidc.require_login
+@oidc.require_login
 def technicalFieldComparisonForWordCloud():
     """
     获取词云所需数据

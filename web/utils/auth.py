@@ -1,6 +1,6 @@
 from flask import redirect, url_for, g
 from base64 import b64decode
-# from web.extensions import oidc
+from web.extensions import oidc
 import json
 
 
@@ -35,14 +35,14 @@ def require_role(client, role):
     :param role:
     :return: True or False
     """
-    # try:
-    #     pre, tkn, post = oidc.get_access_token().split('.')
-    # except Exception as e:
-    #     print(e)
-    #     oidc.logout()
-    #     # TODO 此处应重定向到登陆页面
-    #     return redirect(url_for('index.index'))
-    # missing_padding = 4 - len(tkn) % 4
-    # tkn += '=' * missing_padding
-    # access_token = json.loads(b64decode(tkn, altchars='-_'))
-    # return role in access_token['resource_access'][client]['roles']
+    try:
+        pre, tkn, post = oidc.get_access_token().split('.')
+    except Exception as e:
+        print(e)
+        oidc.logout()
+        # TODO 此处应重定向到登陆页面
+        return redirect(url_for('index.index'))
+    missing_padding = 4 - len(tkn) % 4
+    tkn += '=' * missing_padding
+    access_token = json.loads(b64decode(tkn, altchars='-_'))
+    return role in access_token['resource_access'][client]['roles']
