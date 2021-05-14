@@ -32,11 +32,19 @@
         <div class="row">
             <div class="col-4">
                 <div class="card">
+                    <div class="card-body p-0" style="height: 360px">
+                        <div id="chart-word-cloud-engineer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="card">
                     <div class="card-header">
                         <h4 class="card-header-title">基本信息</h4>
                     </div>
                     <div class="card-table chart">
-                        <table class="table table-sm">
+                        <table class="table table-sm font-size-lg">
                             <tbody>
                             <tr>
                                 <th>单位</th>
@@ -59,52 +67,82 @@
                                 <td>{{ basic_info.teacher.team_patent }}项</td>
                             </tr>
                             <tr>
-                                <th>主要行业</th>
-                                <td>{{ basic_info.engineer.field or "" }}</td>
-                                <td>{{ basic_info.teacher.field or "" }}</td>
+                                <th>合作记录</th>
+                                <td colspan="2"> 无</td>
                             </tr>
+                            {#                            <tr>#}
+                            {#                                <th>主要行业</th>#}
+                            {#                                <td>{{ basic_info.engineer.field or "" }}</td>#}
+                            {#                                <td>{{ basic_info.teacher.field or "" }}</td>#}
+                            {#                            </tr>#}
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-
-{#            <div class="col-8">#}
-{#                <div class="card">#}
-{#                    <div class="card-header">#}
-{#                        <h2 class="card-header-title">专利分布</h2>#}
-{#                    </div>#}
-{#                    <div class="card-body chart p-0">#}
-{#                        <div id="chart-technical-field-comparison"></div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-            <div class="col-8">
+            <div class="col-4">
                 <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-header-title">技术领域演变</h2>
-                        <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
-                            <li class="nav-item cursor-pointer" onclick="showRiver(0);">
-                            <span class="nav-link active" data-toggle="tab">
-{#                              {{ basic_info.engineer.name }} 团队#}
-                              企业团队
-                            </span>
-                            </li>
-                            <li class="nav-item cursor-pointer" onclick="showRiver(1);">
-                            <span class="nav-link" data-toggle="tab">
-{#                              {{ basic_info.teacher.name }} 团队#}
-                              专家团队
-                            </span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-body chart p-0">
-                        <div id="chart-river"></div>
+                    <div class="card-body p-0" style="height: 360px">
+                        <div id="chart-word-cloud-teacher"></div>
                     </div>
                 </div>
             </div>
-{#        </div>#}
-{#        <div class="row">#}
+            {#            <div class="col-8">#}
+            {#                <div class="card">#}
+            {#                    <div class="card-header">#}
+            {#                        <h2 class="card-header-title">专利分布</h2>#}
+            {#                    </div>#}
+            {#                    <div class="card-body chart p-0">#}
+            {#                        <div id="chart-technical-field-comparison"></div>#}
+            {#                    </div>#}
+            {#                </div>#}
+            {#            </div>#}
+            {#            <div class="col-6">#}
+            {#                <div class="card">#}
+            {#                    <div class="card-header">#}
+            {#                        <h2 class="card-header-title">技术领域演变</h2>#}
+            {#                        <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">#}
+            {#                            <li class="nav-item cursor-pointer" onclick="showRiver(0);">#}
+            {#                            <span class="nav-link active" data-toggle="tab">#}
+            {#                              {{ basic_info.engineer.name }} 团队#}
+            {#                              企业团队#}
+            {#                            </span>#}
+            {#                            </li>#}
+            {#                            <li class="nav-item cursor-pointer" onclick="showRiver(1);">#}
+            {#                            <span class="nav-link" data-toggle="tab">#}
+            {#                              {{ basic_info.teacher.name }} 团队#}
+            {#                              专家团队#}
+            {#                            </span>#}
+            {#                            </li>#}
+            {#                        </ul>#}
+            {#                    </div>#}
+            {#                    <div class="card-body height-500px p-0">#}
+            {#                        <div id="chart-river"></div>#}
+            {#                    </div>#}
+            {#                </div>#}
+            {#            </div>#}
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-header-title">{{ basic_info.engineer.name }}团队 技术领域演变</h2>
+                    </div>
+                    <div class="card-body height-500px p-0">
+                        <div id="chart-river-engineer"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-header-title">{{ basic_info.teacher.name }}团队 技术领域演变</h2>
+                    </div>
+                    <div class="card-body height-500px p-0">
+                        <div id="chart-river-teacher"></div>
+                    </div>
+                </div>
+            </div>
+            {#        </div>#}
+            {#        <div class="row">#}
             <div class="col-4">
                 <div class="card">
                     <div class="card-header">
@@ -130,84 +168,102 @@
                 </div>
             </div>
 
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-header-title">行业分布</h2>
-                    </div>
-                    <div class="card-body p-0 height-500px">
-                        <div id="chart-radar"></div>
-                    </div>
-                </div>
-            </div>
+            {#            <div class="col-4">#}
+            {#                <div class="card">#}
+            {#                    <div class="card-header">#}
+            {#                        <h2 class="card-header-title">行业分布</h2>#}
+            {#                    </div>#}
+            {#                    <div class="card-body p-0 height-500px">#}
+            {#                        <div id="chart-radar"></div>#}
+            {#                    </div>#}
+            {#                </div>#}
+            {#            </div>#}
 
+            <!-- -->
+            {#            <div class="col-4">#}
+            {#                <div class="card">#}
+            {#                    <div class="card-header">#}
+            {#                        <h2 class="card-header-title">#}
+            {#                            专利对比#}
+            {#                        </h2>#}
+            {#                        <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">#}
+            {#                            <li class="nav-item">#}
+            {#                                <a href="#patents-company" class="nav-link active" data-toggle="tab">#}
+            {#                                    企业专利#}
+            {#                                </a>#}
+            {#                            </li>#}
+            {#                            <li class="nav-item">#}
+            {#                                <a href="#patents-teacher" class="nav-link" data-toggle="tab">#}
+            {#                                    专家专利#}
+            {#                                </a>#}
+            {#                            </li>#}
+            {#                        </ul>#}
+            {#                    </div>#}
+            {#                    <div class="card-body p-0 height-500px tab-content">#}
+            {#                        <div class="tab-pane active" id="patents-company">#}
+            {#                            <ul class="list-group">#}
+            {#                                {% for patent in basic_info.engineer.patents_list %}#}
+            {#                                    <li class="list-group-item d-flex justify-content-between">#}
+            {#                                        {{ patent.name }}#}
+            {#                                        <span class="nowrap ml-1">{{ patent.date | timestamp2date }}</span>#}
+            {#                                    </li>#}
+            {#                                {% endfor %}#}
+            {#                            </ul>#}
+            {#                        </div>#}
+            {#                        <div class="tab-pane" id="patents-teacher">#}
+            {#                            <ul class="list-group">#}
+            {#                                {% for patent in basic_info.teacher.patents_list %}#}
+            {#                                    <li class="list-group-item d-flex justify-content-between">{{ patent.name }}#}
+            {#                                        <span class="nowrap ml-1">{{ patent.date | timestamp2date }}</span>#}
+            {#                                    </li>#}
+            {#                                {% endfor %}#}
+            {#                            </ul>#}
+            {#                        </div>#}
+            {#                    </div>#}
+            {#                </div>#}
+            {#            </div>#}
             <div class="col-4">
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-header-title">
-                            专利对比
+                            {{ basic_info.engineer.name }} 团队专利
                         </h2>
-                        <ul class="nav nav-tabs nav-tabs-sm card-header-tabs">
-                            <li class="nav-item">
-                                <a href="#patents-company" class="nav-link active" data-toggle="tab">
-                                    企业专利
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#patents-teacher" class="nav-link" data-toggle="tab">
-                                    专家专利
-                                </a>
-                            </li>
-                        </ul>
                     </div>
-                    <div class="card-body p-0 height-500px tab-content">
-                        <div class="tab-pane active" id="patents-company">
-                            <ul class="list-group">
-                                {% for patent in basic_info.engineer.patents_list %}
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        {{ patent.name }}
-                                        <span class="nowrap ml-1">{{ patent.date | timestamp2date }}</span>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="tab-pane" id="patents-teacher">
-                            <ul class="list-group">
-                            {% for patent in basic_info.teacher.patents_list %}
-                                <li class="list-group-item d-flex justify-content-between">{{ patent.name }}
+                    <div class="card-body p-0 height-500px">
+                        <ul class="list-group">
+                            {% for patent in basic_info.engineer.patents_list %}
+                                <li class="list-group-item d-flex justify-content-between font-size-lg">{{ patent.name }}
                                     <span class="nowrap ml-1">{{ patent.date | timestamp2date }}</span>
                                 </li>
                             {% endfor %}
                         </ul>
-                        </div>
                     </div>
                 </div>
             </div>
-{#            <div class="col-4">#}
-{#                <div class="card">#}
-{#                    <div class="card-header">#}
-{#                        <h2 class="card-header-title">#}
-                            {#                            {{ basic_info.teacher.name }} 团队专利#}
-{#                            专家团队专利#}
-{#                        </h2>#}
-{#                    </div>#}
-{#                    <div class="card-body p-0 height-500px">#}
-{#                        <ul class="list-group">#}
-{#                            {% for patent in basic_info.teacher.patents_list %}#}
-{#                                <li class="list-group-item d-flex justify-content-between">{{ patent.name }}#}
-{#                                    <span class="nowrap ml-1">{{ patent.date | timestamp2date }}</span>#}
-{#                                </li>#}
-{#                            {% endfor %}#}
-{#                        </ul>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-header-title">
+                            {{ basic_info.teacher.name }} 团队专利
+                        </h2>
+                    </div>
+                    <div class="card-body p-0 height-500px">
+                        <ul class="list-group">
+                            {% for patent in basic_info.teacher.patents_list %}
+                                <li class="list-group-item d-flex justify-content-between font-size-lg">{{ patent.name }}
+                                    <span class="nowrap ml-1">{{ patent.date | timestamp2date }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Modal -->
     <div class="modal fade show" id="linkPathModal" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title" id="linkPathModalLabel">联络路径</h3>
@@ -216,7 +272,7 @@
                     </button>
                 </div>
                 <div class="modal-body chart p-0">
-                    <div id="link-path-chart" style="width: 600px; height: 300px;"></div>
+                    <div id="link-path-chart" style="width: 1140px; height: 300px;"></div>
                 </div>
             </div>
         </div>
@@ -246,8 +302,10 @@
         let TEACHER_TEAM = "{{ basic_info.teacher.name }} 团队";
     </script>
 
+    <script src="{{ url_for('static', filename='js/dist/echarts-wordcloud.js') }}"></script>
     <script src="{{ url_for('static', filename='js/social_network/link_path.js') }}"></script>
     <script src="{{ url_for('static', filename='js/social_network/recommend_detail.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/social_network/radar.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/social_network/themeRiver.js') }}"></script>
+    {#    <script src="{{ url_for('static', filename='js/social_network/detail/radar.js') }}"></script>#}
+    <script src="{{ url_for('static', filename='js/social_network/detail/themeRiver.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/social_network/detail/word_cloud.js') }}"></script>
 {% endblock %}

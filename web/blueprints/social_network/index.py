@@ -54,19 +54,21 @@ def fuzzyMatchTeacher():
 
 
 @index_bp.route("/recommend")
+@oidc.require_login
 def recommendResult():
     town_id = request.args.get("town", default="", type=str)
     com_id = request.args.get("com", default="", type=str)
     uni_id = request.args.get("uni", default="", type=str)
     teacher_id = request.args.get("teacher", default="", type=str)
     limit = request.args.get("limit", default=15, type=int)
-    if not auth.require_role("KETD", "技转中心"):
+    if auth.require_role("KETD", "技转中心"):
         # 高校技转中心用户
         return recommend2University_service.recommendResult(town_id=town_id, com_id=com_id, uni_id=uni_id,
                                                             teacher_id=teacher_id, limit=limit)
     else:
         # 地区中介用户
         return recommend2Area_service.recommendResult(town_id=town_id, com_id=com_id, uni_id=uni_id, limit=limit)
+    # return recommend2Area_service.recommendResult(town_id=town_id, com_id=com_id, uni_id=uni_id, limit=limit)
 
 
 @index_bp.route("/recommend-table")

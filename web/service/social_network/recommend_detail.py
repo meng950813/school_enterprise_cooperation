@@ -464,6 +464,37 @@ def getYearFromTimestamp(timestamp):
     return datetime.fromtimestamp(int(timestamp)).year
 
 
+# 词云相关
+def wordCloud(teamId, teacher=True):
+    """
+    根据团队id & 团队类型获取团队涉及行业的词云
+    :param teamId: 团队id ,
+    :param teacher: 是否是专家团队，布尔型。
+    :return: {
+        success: True or False, message: xx,
+        data: [
+            {
+                name: xxx,
+                value: 123
+            }, ...
+        ]
+    }
+    """
+    # ==> [{ipc:xxx, patent:xxx, date: 1429142400}, ...]结果中包含重复数据，需要去重
+    ipc_patent_time = detail_dao.getTeamTechnicalFieldDistribute(team_id=teamId, teacher=teacher)
+
+    ipc_patent = formatIPC_PatentRelation(ipc_patent_time)  # {ipc: {p1,p2,...}, ...}\
+    # ==> [{code: xxxx, title: xxx, ipc: xx}, ...]
+    industry_ipc = detail_dao.getIndustryIPC(ipc_patent.keys())
+    industry_title, ipc_industry = formatIPC_Industry(industry_ipc)
+
+    # 统计每个行业下专利的数量 ==> {industry_code: {p1, p2, ...}, ...}
+    industry_patent = countIndustryPatent(ipc_industry, ipc_patent)
+    # ==> [["农药制造", 110], ....]
+    res = [{"name": industry_title[code], "value": len(patents)} for code, patents in industry_patent.items()]
+    return public_service.returnResult(success=True, data=res)
+
+
 if __name__ == '__main__':
     data = chartsRiver(teamId=5993157, teacher=True)
     print(data)

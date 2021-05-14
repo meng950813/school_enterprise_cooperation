@@ -8,6 +8,9 @@ let ArrayGraphOption = {
             return params.data.label;
         }
     },
+    // textStyle:{
+    //     fontSize : 22
+    // },
     legend: [{data: []}],
     color: color_pool,
     animationDuration: 1500,
@@ -64,7 +67,7 @@ function formatGraphData(graph_data) {
     let length = graph_data.nodes.length;
     let intervel = length > 0 ? 1.0 / (length - 1) : 0;
     for (let i = 0; i < length; i++) {
-        nodes = nodes.concat(generateCoordinate(graph_data.nodes[i], i * intervel, 30, container));
+        nodes = nodes.concat(generateCoordinate(graph_data.nodes[i], i * intervel, 40, container));
     }
 
     ArrayGraphOption.series[0].data = nodes;
@@ -93,7 +96,7 @@ function generateCoordinate(points, offset, symbolSize, container) {
     }
     let height = container.parentElement.clientHeight;
 
-    let interval = height / points.length;
+    let interval = height / (points.length);
     let center = interval / 2;
 
     let x = offset * width, y;

@@ -1,7 +1,8 @@
 /**
  * 河流图
  * */
-let riverChart = getEChartsObject("chart-river");
+let EngineerRiverChart = getEChartsObject("chart-river-engineer");
+let TeacherRiverChart = getEChartsObject("chart-river-teacher");
 // let engineerRiverOption,
 
 let riverOption = {
@@ -12,7 +13,9 @@ let riverOption = {
 
         }
     },
-
+   textStyle:{
+        fontSize : 18
+    },
     legend: {
         data: []
     },
@@ -61,6 +64,7 @@ let riverOption = {
 
 function getRiverData(type = 1) {
     let teamId = type == 1 ? TEACHER_ID : ENGINEER_ID;
+    let echartsObj = type == 1 ? TeacherRiverChart : EngineerRiverChart;
     $.ajax({
         type: "get",
         url: "/detail/river",
@@ -70,12 +74,11 @@ function getRiverData(type = 1) {
                 toggle_alert(false, res.message);
                 return false;
             }
-            let option = riverOption;
+            let option = JSON.parse(JSON.stringify(riverOption));
             option.legend.data = res.data.legend;
             option.series[0].data = res.data.data;
 
-            riverChart.setOption(option);
-            riverChart.hideLoading();
+            echartsObj.setOption(option);
         },
         error: function (error) {
             console.error(error);
@@ -87,5 +90,7 @@ function getRiverData(type = 1) {
 function showRiver(type = 0) {
     getRiverData(type)
 }
+getRiverData(0);
+getRiverData(1);
 
-showRiver();
+// showRiver();

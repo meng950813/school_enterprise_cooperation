@@ -26,10 +26,13 @@ let graphOption = {
                     show: true,
                 }
             },
+            textStyle:{
+              fontSize:18
+            },
             force: {
                 repulsion: 100,//节点之间的斥力因子。支持数组表达斥力范围，值越大斥力越大。
                 gravity: 0.01,//节点受到的向中心的引力因子。该值越大节点越往中心点靠拢。
-                edgeLength: [90, 100],//边的两个节点之间的距离，这个距离也会受 repulsion。[10, 50] ,值越小则长度越长
+                edgeLength: [50, 70],//边的两个节点之间的距离，这个距离也会受 repulsion。[10, 50] ,值越小则长度越长
                 layoutAnimation: true
             },
             lineStyle: {

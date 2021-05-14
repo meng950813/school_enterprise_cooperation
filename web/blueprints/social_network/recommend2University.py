@@ -11,7 +11,7 @@ recommend2University_bp = Blueprint('recommend2University', __name__)
 @recommend2University_bp.route("/")
 @recommend2University_bp.route("/index")
 @oidc.require_login
-# @oidc.require_keycloak_role('KETD', "技转中心")
+@oidc.require_keycloak_role('KETD', "技转中心")
 def index():
     user_id = auth.getUserId()
     # orgs = [{"id": 19036, "name": "清华大学"}]

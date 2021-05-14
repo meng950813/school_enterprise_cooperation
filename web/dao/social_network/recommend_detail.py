@@ -102,7 +102,7 @@ def getTeamMembers(team_id, teacher=True):
     cql = "match (t1:{label})-[r:cooperate]->(t2:{label}) " \
           "where t1.team={team_id} and t2.team={team_id} and r.frequency > 2 " \
           "and t1.id <> t2.id return t1.id as id1, t1.name as name1, t1.patent as patent1, r.frequency as count, " \
-          "t2.id as id2, t2.name as name2, t2.patent as patent2".format(label=label, team_id=team_id)
+          "t2.id as id2, t2.name as name2, t2.patent as patent2 ".format(label=label, team_id=team_id)
     return neo4j.run(cql)
 
 

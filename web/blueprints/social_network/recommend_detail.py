@@ -80,3 +80,15 @@ def technicalFieldComparisonForRiver():
     teamId = request.args.get("teamId", default=None, type=int)
     team_type = request.args.get("type", default=1, type=int)
     return detail_service.chartsRiver(teamId=teamId, teacher=True if 1 == team_type else False)
+
+
+@recommend_detail_bp.route("/wordCloud")
+@oidc.require_login
+def technicalFieldComparisonForWordCloud():
+    """
+    获取词云所需数据
+    :return:
+    """
+    teamId = request.args.get("teamId", default=None, type=int)
+    team_type = request.args.get("type", default=1, type=int)
+    return detail_service.wordCloud(teamId=teamId, teacher=True if 1 == team_type else False)
