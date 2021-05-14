@@ -7,7 +7,7 @@ cryptography==3.2.1
 docker==4.4.0
 english==2020.7.0
 Flask==1.1.2
-flask-oidc2@git+https://github.com/reno9/flask-oidc2.git@d7dba2cf0d2c41c4493a8c172d5ad08003a7c86c
+flask-oidc2==1.5.1.dev3+gd7dba2c
 Flask-WTF==0.14.3
 httplib2==0.18.1
 idna==2.10
@@ -25,6 +25,7 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.20
 Pygments==2.7.3
+PyMySQL==1.0.2
 pyparsing==2.4.7
 python-dotenv==0.15.0
 pytz==2020.4
