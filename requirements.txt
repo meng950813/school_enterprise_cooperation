@@ -29,7 +29,6 @@ PyMySQL==1.0.2
 pyparsing==2.4.7
 python-dotenv==0.15.0
 pytz==2020.4
-pywin32==227
 requests==2.25.0
 rsa==4.6
 six==1.15.0
