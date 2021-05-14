@@ -4,7 +4,7 @@ from web.service.social_network import personal_network as personal_service
 from web.service.social_network import recommend2University as recommend2University_service
 from web.service.social_network import recommend2Area as recommend2Area_service
 from web.service.social_network import api as api_service
-from web.extensions import oidc
+# from web.extensions import oidc
 from web.utils import auth
 import json
 
@@ -13,7 +13,7 @@ index_bp = Blueprint('index', __name__)
 
 @index_bp.route("/")
 @index_bp.route("/index")
-@oidc.require_login
+# @oidc.require_login
 def index():
     if auth.isUniversityAgent():
         # 高校技转中心用户
@@ -26,9 +26,9 @@ def index():
 
 
 @index_bp.route("/logout")
-@oidc.require_login
+# @oidc.require_login
 def logout():
-    oidc.logout()
+    # oidc.logout()
     return redirect(url_for('index.index'))
 
 
@@ -54,7 +54,7 @@ def fuzzyMatchTeacher():
 
 
 @index_bp.route("/recommend")
-@oidc.require_login
+# @oidc.require_login
 def recommendResult():
     town_id = request.args.get("town", default="", type=str)
     com_id = request.args.get("com", default="", type=str)
@@ -77,7 +77,7 @@ def recommendTable():
 
 
 @index_bp.route("/personal-network")
-@oidc.require_login
+# @oidc.require_login
 def personalNetwork():
     if auth.isAreaAgent():
         return render_template("social_network/personal_network.html", area=True)
@@ -88,7 +88,7 @@ def personalNetwork():
 
 
 @index_bp.route("/getPersonalNetwork")
-@oidc.require_login
+# @oidc.require_login
 def getPersonalNetwork():
     agent_id = auth.getUserId()
     agent_type = "uni" if auth.require_role("KETD", "技转中心") else "area"
@@ -96,7 +96,7 @@ def getPersonalNetwork():
 
 
 @index_bp.route("/addContactInformation", methods=["POST"])
-@oidc.require_login
+# @oidc.require_login
 def addContactInformation():
     agent_id = auth.getUserId()
     agent_type = "uni" if auth.require_role("KETD", "技转中心") else "area"
