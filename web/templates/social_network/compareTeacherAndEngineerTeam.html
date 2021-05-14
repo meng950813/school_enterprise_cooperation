@@ -44,7 +44,7 @@
                         <h4 class="card-header-title">基本信息</h4>
                     </div>
                     <div class="card-table chart">
-                        <table class="table table-sm font-size-lg">
+                        <table class="table table-sm">
                             <tbody>
                             <tr>
                                 <th>单位</th>
@@ -232,7 +232,7 @@
                     <div class="card-body p-0 height-500px">
                         <ul class="list-group">
                             {% for patent in basic_info.engineer.patents_list %}
-                                <li class="list-group-item d-flex justify-content-between font-size-lg">{{ patent.name }}
+                                <li class="list-group-item d-flex justify-content-between">{{ patent.name }}
                                     <span class="nowrap ml-1">{{ patent.date | timestamp2date }}</span>
                                 </li>
                             {% endfor %}
@@ -250,7 +250,7 @@
                     <div class="card-body p-0 height-500px">
                         <ul class="list-group">
                             {% for patent in basic_info.teacher.patents_list %}
-                                <li class="list-group-item d-flex justify-content-between font-size-lg">{{ patent.name }}
+                                <li class="list-group-item d-flex justify-content-between">{{ patent.name }}
                                     <span class="nowrap ml-1">{{ patent.date | timestamp2date }}</span>
                                 </li>
                             {% endfor %}
@@ -272,7 +272,7 @@
                     </button>
                 </div>
                 <div class="modal-body chart p-0">
-                    <div id="link-path-chart" style="width: 1140px; height: 300px;"></div>
+                    <div id="link-path-chart"></div>
                 </div>
             </div>
         </div>
