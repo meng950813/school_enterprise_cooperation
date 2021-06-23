@@ -8,9 +8,9 @@ let ArrayGraphOption = {
             return params.data.label;
         }
     },
-    // textStyle:{
-    //     fontSize : 22
-    // },
+    textStyle:{
+        fontSize : 16
+    },
     legend: [{data: []}],
     color: color_pool,
     animationDuration: 1500,

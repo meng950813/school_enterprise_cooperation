@@ -37,7 +37,7 @@
 
         <!-- Brand -->
         <a class="navbar-brand mr-auto" href="/index">
-            <img src="{{ url_for('static', filename='image/logo_low.jpg') }}" alt="..." class="navbar-brand-img">
+            <img src="{{ url_for('static', filename='image/logo.png') }}" alt="..." class="navbar-brand-img">
         </a>
 
         <!-- User -->
@@ -47,7 +47,7 @@
                 <!-- Toggle -->
                 <a href="#" class="avatar avatar-sm avatar-online dropdown-toggle" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
-                    <img src="{{ url_for("static", filename="image/logo.png") }}" alt="..." class="avatar-img rounded-circle">
+                    <img src="{{ url_for("static", filename="image/favicon.jpg") }}" alt="..." class="avatar-img rounded-circle">
                 </a>
 
                 <!-- Menu -->
@@ -66,23 +66,23 @@
             <!-- Navigation -->
             <ul class="navbar-nav mr-lg-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/index" role="button" aria-haspopup="true"
+                    <a class="nav-link" href="/index" role="button" aria-haspopup="true"
                         aria-expanded="false">
                         首页
                     </a>
                 </li>
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link" href="/cooperate" target="_blank">#}
-{#                        合作管理#}
-{#                    </a>#}
-{#                </li>#}
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link" href="/visit" target="_blank">#}
-{#                        拜访管理#}
-{#                    </a>#}
-{#                </li>#}
                 <li class="nav-item">
-                    <a class="nav-link " href="{{ url_for('index.personalNetwork') }}" target="_blank">
+                    <a class="nav-link" href="/cooperate" target="_blank">
+                        合作管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/visit" target="_blank">
+                        拜访管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link  active" href="{{ url_for('index.personalNetwork') }}" target="_blank">
                         个人中心
                     </a>
                 </li>

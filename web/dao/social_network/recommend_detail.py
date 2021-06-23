@@ -30,7 +30,7 @@ def getEngineerTeamBasicInfo(e_id):
     return neo4j.run(cql)
 
 
-def getSimilarPatents(team_teacher, team_engineer, teacher=True, skip=0, limit=15):
+def getSimilarPatents(team_teacher, team_engineer, teacher=True, skip=0, limit=1500):
     """
     根据 专家团队和工程师团队的 team_id 获取团队间 相似的专利
     :return: [] or [{"teacher": Node type data, "engineer": Node type data}]
@@ -39,7 +39,9 @@ def getSimilarPatents(team_teacher, team_engineer, teacher=True, skip=0, limit=1
     cql = "match (t:Teacher)-[:write]-(pt:Patent)-[:include]-(:IPC)-[:include]-(pe:Patent)-[:write]-(e:Engineer) " \
           "where t.team={team_teacher} and e.team={team_engineer} " \
           "return distinct({patent}.application_number) as code, {patent}.name as name, " \
-          "{patent}.application_date as date order by date desc skip {skip} limit {limit}" \
+          "{patent}.invalidation as invalidation, {patent}.application_date as date, " \
+          "{patent}.authorization_date as authorization_date " \
+          "order by date desc skip {skip} limit {limit}" \
         .format(team_teacher=team_teacher, team_engineer=team_engineer, patent=patent, skip=skip, limit=limit)
     return neo4j.run(cql)
 

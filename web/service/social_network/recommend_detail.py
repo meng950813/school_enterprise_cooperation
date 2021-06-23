@@ -1,7 +1,7 @@
 from web.service.social_network import public as public_service
 from web.dao.social_network import recommend_detail as detail_dao
 from datetime import datetime
-import math
+import math, time
 
 
 # 团队对比
@@ -18,6 +18,10 @@ def compareTeacherAndEngineerTeam(eid=None, tid=None):
     # patents ==> [] or [{code, name, date}]
     engineer_patents = detail_dao.getSimilarPatents(team_teacher=tid, team_engineer=eid, teacher=False)
     teacher_patents = detail_dao.getSimilarPatents(team_teacher=tid, team_engineer=eid, teacher=True)
+
+    print(len(teacher_patents))
+    tp = {p["code"] for p in teacher_patents}
+    print(len(tp))
 
     # team_e_patentNum ==> [] or [{nums:xxx}]
     team_e_patentNum = detail_dao.getTeamPatentsNumber(team_id=eid, teacher=False)
@@ -44,10 +48,18 @@ def formatDetailInfo(data, team_patent, patents_list, field=""):
     :param field:
     :return:
     """
+    now = int(time.time())
     result = {"org": "", "name": "", "members": "", "field": "", "institution": "", "team_patent": "",
               "patents_list": []}
     if len(data) > 0:
         result = data[0]
+
+    for patent in patents_list:
+        if patent["authorization_date"] is not None:
+            patent["authorization_date"] = int((now - patent["authorization_date"]) / (60 * 60 * 24 * 365))
+        else:
+            patent["authorization_date"] = 0
+
     result["patents_list"] = patents_list
     result["team_patent"] = 0 if len(team_patent) == 0 else team_patent[0]["nums"]
     result["field"] = field

@@ -54,7 +54,7 @@ def fuzzyMatchTeacher():
 
 
 @index_bp.route("/recommend")
-@oidc.require_login
+# @oidc.require_login
 def recommendResult():
     town_id = request.args.get("town", default="", type=str)
     com_id = request.args.get("com", default="", type=str)

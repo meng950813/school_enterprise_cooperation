@@ -44,7 +44,7 @@
                         <h4 class="card-header-title">基本信息</h4>
                     </div>
                     <div class="card-table chart">
-                        <table class="table table-sm">
+                        <table class="table table-sm font-size-lg">
                             <tbody>
                             <tr>
                                 <th>单位</th>
@@ -228,6 +228,7 @@
                         <h2 class="card-header-title">
                             {{ basic_info.engineer.name }} 团队专利
                         </h2>
+                         <h2 class="card-header-tabs">{{ basic_info.engineer.patents_list | length }}项</h2>
                     </div>
                     <div class="card-body p-0 height-500px">
                         <ul class="list-group">
@@ -246,11 +247,13 @@
                         <h2 class="card-header-title">
                             {{ basic_info.teacher.name }} 团队专利
                         </h2>
+                        <h2 class="card-header-tabs">{{ basic_info.teacher.patents_list | length }}项</h2>
                     </div>
                     <div class="card-body p-0 height-500px">
                         <ul class="list-group">
                             {% for patent in basic_info.teacher.patents_list %}
                                 <li class="list-group-item d-flex justify-content-between">{{ patent.name }}
+                                    <span class="nowrap ml-1">{{ patent.invalidation }}{{ patent.authorization_date }}</span>
                                     <span class="nowrap ml-1">{{ patent.date | timestamp2date }}</span>
                                 </li>
                             {% endfor %}
